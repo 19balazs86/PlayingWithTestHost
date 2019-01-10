@@ -8,7 +8,9 @@ namespace PlayingWithTestHost
     {
       T bindingObject = new T();
 
-      configuration.GetSection(nameof(T)).Bind(bindingObject);
+      string sectionName = bindingObject.GetType().Name;
+
+      configuration.GetSection(sectionName).Bind(bindingObject);
 
       return bindingObject;
     }
