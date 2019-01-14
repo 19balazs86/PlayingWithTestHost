@@ -18,10 +18,7 @@ namespace PlayingWithTestHost.IntegrationTests
       // Use TestStartup class from your API Host project to configure the test server.
       // If you use Startup instead of TestStartup, you will have authentication issue.
       IWebHostBuilder builder = new WebHostBuilder()
-        .ConfigureAppConfiguration(configBuilder =>
-        {
-          configBuilder.AddJsonFile("appsettings.json");
-        })
+        .ConfigureAppConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.json"))
         .UseStartup<TestStartup>();
 
       _testServer = new TestServer(builder);

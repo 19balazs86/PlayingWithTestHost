@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -26,11 +25,9 @@ namespace PlayingWithTestHost.IntegrationTests
 
       // Act
       HttpResponseMessage response = await _fixture.Client.SendAsync(request);
-
-      Exception ensureException = Record.Exception(() => response.EnsureSuccessStatusCode());
       
       // Assert
-      Assert.Null(ensureException);
+      Assert.True(response.IsSuccessStatusCode);
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
       string responseString = await response.Content.ReadAsStringAsync();
