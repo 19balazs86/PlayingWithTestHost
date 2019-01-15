@@ -1,10 +1,8 @@
 # Playing with TestHost
 
-This small .NET Core WebAPI application is an example for **using the built-in TestServer** in the Microsoft.AspNetCore.TestHost assembly **to write integration tests**.
+This small .NET Core WebAPI application is an example for **using the built-in TestServer** in the Microsoft.AspNetCore.TestHost assembly **to write integration tests** against your HTTP endpoints.
 
-Usually you use authentication, which can lead you an unauthorized response in the integration test. This example gives you a solution for this issue.
-
-[Alba](http://jasperfx.github.io/alba/getting_started "Alba"): class library to write integration tests against HTTP endpoints.
+Authentication can causes unauthorized response in the integration test. The example gives you a solution for this issue.
 
 Resources:
 - Microsoft video: [YouTube link.](https://www.youtube.com/watch?v=O3AvN2Rr1uI "YouTube link")
@@ -12,6 +10,8 @@ Resources:
 - InfoQ article: [How to Test ASP.NET Core Web API.](https://www.infoq.com/articles/testing-aspnet-core-web-api "How to Test ASP.NET Core Web API")
 - Medium article: [Bypassing ASP.NET Core Authorize in integration tests.](https://medium.com/jackwild/bypassing-asp-net-core-2-0-authorize-tags-in-integration-tests-7bda8fcb0eca "Bypassing ASP.NET Core Authorize in integration tests")
 - Microsoft official page: [Use cookie authentication without ASP.NET Core Identity.](https://docs.microsoft.com/en-ie/aspnet/core/security/authentication/cookie?view=aspnetcore-2.2 "Use cookie authentication without ASP.NET Core Identity")
+
+Regarding the topic, worth to check the [Alba](http://jasperfx.github.io/alba/getting_started "Alba") - class library to write integration tests.
 
 Use the WebHostBuilder to create a TestServer. Genereate the HttpClient to call your API.
 
