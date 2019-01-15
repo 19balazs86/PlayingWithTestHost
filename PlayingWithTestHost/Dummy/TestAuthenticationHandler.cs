@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -30,9 +29,10 @@ namespace PlayingWithTestHost.Dummy
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-      ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(Options.Identity);
+      ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(Options.Identity());
 
-      AuthenticationTicket authenticationTicket = new AuthenticationTicket(claimsPrincipal, new AuthenticationProperties(), TestStartup.AuthScheme);
+      AuthenticationTicket authenticationTicket =
+        new AuthenticationTicket(claimsPrincipal, new AuthenticationProperties(), TestStartup.AuthScheme);
 
       return Task.FromResult(AuthenticateResult.Success(authenticationTicket));
     }
@@ -40,11 +40,8 @@ namespace PlayingWithTestHost.Dummy
 
   public class TestAuthenticationOptions : AuthenticationSchemeOptions
   {
-    private static readonly UserModel _testUser = new UserModel("test", new [] { "User" });
+    public Func<UserModel> TestUserFunc { get; set; }
 
-    private static readonly IEnumerable<Claim> _testUserClaims = _testUser.ToClaims();
-
-    // This will be our test user.
-    public virtual ClaimsIdentity Identity { get; } = new ClaimsIdentity(_testUserClaims, "test");
+    public ClaimsIdentity Identity() => new ClaimsIdentity(TestUserFunc().ToClaims(), "test");
   }
 }

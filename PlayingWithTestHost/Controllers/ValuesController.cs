@@ -35,5 +35,13 @@ namespace PlayingWithTestHost.Controllers
       // Our test case, will be return, with the predefined test user in the TestAuthenticationHandler.
       return new UserModel(User.Claims);
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet("admin")]
+    public ActionResult<UserModel> GetAdminUserValues()
+    {
+      // Our test case, will be return, with the predefined test user in the TestAuthenticationHandler.
+      return new UserModel(User.Claims);
+    }
   }
 }
