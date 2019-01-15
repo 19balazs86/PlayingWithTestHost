@@ -4,6 +4,8 @@ This small .NET Core WebAPI application is an example for **using the built-in T
 
 Usually you use authentication, which can lead you an unauthorized response in the integration test. This example gives you a solution for this issue.
 
+[Alba](http://jasperfx.github.io/alba/getting_started "Alba"): class library to write integration tests against HTTP endpoints.
+
 Resources:
 - Microsoft video: [YouTube link.](https://www.youtube.com/watch?v=O3AvN2Rr1uI "YouTube link")
 - Medium article: [Integration Testing in Asp.Net Core.](https://koukia.ca/integration-testing-in-asp-net-core-2-0-51d14ede3968 "Integration Testing in Asp.Net Core")
@@ -34,11 +36,8 @@ public async Task GetValues(string requestUri)
 
     // Act
     HttpResponseMessage response = await _fixture.Client.SendAsync(request);
-
-    Exception ensureException = Record.Exception(() => response.EnsureSuccessStatusCode());
     
     // Assert
-    Assert.Null(ensureException);
     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
     string responseString = await response.Content.ReadAsStringAsync();
