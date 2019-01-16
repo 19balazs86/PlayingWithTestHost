@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -29,7 +30,12 @@ namespace PlayingWithTestHost.Dummy
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-      ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(Options.Identity());
+      ClaimsIdentity claimsIdentity = Options.Identity();
+
+      if (claimsIdentity is null)
+        return Task.FromResult(AuthenticateResult.Fail("ClaimsIdentity is null."));
+
+      ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
       AuthenticationTicket authenticationTicket =
         new AuthenticationTicket(claimsPrincipal, new AuthenticationProperties(), TestStartup.AuthScheme);
@@ -42,6 +48,13 @@ namespace PlayingWithTestHost.Dummy
   {
     public Func<UserModel> TestUserFunc { get; set; }
 
-    public ClaimsIdentity Identity() => new ClaimsIdentity(TestUserFunc().ToClaims(), "test");
+    public ClaimsIdentity Identity()
+    {
+      IEnumerable<Claim> claims = TestUserFunc is null ? null : TestUserFunc()?.ToClaims();
+
+      if (claims is null) return null;
+
+      return new ClaimsIdentity(claims, "test");
+    }
   }
 }
