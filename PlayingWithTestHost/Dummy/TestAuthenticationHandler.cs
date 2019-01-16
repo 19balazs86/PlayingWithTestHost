@@ -50,7 +50,7 @@ namespace PlayingWithTestHost.Dummy
 
     public ClaimsIdentity Identity()
     {
-      IEnumerable<Claim> claims = TestUserFunc is null ? null : TestUserFunc()?.ToClaims();
+      IEnumerable<Claim> claims = TestUserFunc?.Invoke()?.ToClaims();
 
       if (claims is null) return null;
 
