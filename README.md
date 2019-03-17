@@ -30,22 +30,25 @@ Client = _testServer.CreateClient();
 
 ```csharp
 [Theory]
-[InlineData("values")]
-[InlineData("values/config")]
-[InlineData("values/user")]
-public async Task GetValues(string requestUri)
+[InlineData("values", typeof(IEnumerable<string>))]
+[InlineData("values/config", typeof(TestConfig))]
+[InlineData("values/user", typeof(UserModel))]
+public async Task GetValues(string requestUri, Type objectType)
 {
     // Arrange
     HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("GET"), requestUri);
 
     // Act
     HttpResponseMessage response = await _fixture.Client.SendAsync(request);
-    
+
     // Assert
     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-    string responseString = await response.Content.ReadAsStringAsync();
+    // Content.Deserialize: Custom extension for HttpContent.
+    // The response can be quite big. Deserialize the response directly from stream
+    // to avoid allocating more memory, than necessary.
+    object responseObject = await response.Content.Deserialize(objectType);
 
-    Assert.False(string.IsNullOrWhiteSpace(responseString));
+    Assert.NotNull(responseObject);
 }
 ```

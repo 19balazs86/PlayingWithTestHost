@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -21,10 +23,10 @@ namespace PlayingWithTestHost.IntegrationTests
     }
 
     [Theory]
-    [InlineData("values")]
-    [InlineData("values/config")]
-    [InlineData("values/user")]
-    public async Task GetValues(string requestUri)
+    [InlineData("values", typeof(IEnumerable<string>))]
+    [InlineData("values/config", typeof(TestConfig))]
+    [InlineData("values/user", typeof(UserModel))]
+    public async Task GetValues(string requestUri, Type objectType)
     {
       // Arrange
       _fixture.TestUser = _user;
@@ -37,9 +39,12 @@ namespace PlayingWithTestHost.IntegrationTests
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-      string responseString = await response.Content.ReadAsStringAsync();
+      // Content.Deserialize: Custom extension for HttpContent.
+      // The response can be quite big. Deserialize the response directly from stream
+      // to avoid allocating more memory, than necessary.
+      object responseObject = await response.Content.Deserialize(objectType);
 
-      Assert.False(string.IsNullOrWhiteSpace(responseString));
+      Assert.NotNull(responseObject);
     }
 
     [Fact]
@@ -66,6 +71,11 @@ namespace PlayingWithTestHost.IntegrationTests
 
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+      UserModel userModel = await response.Content.Deserialize<UserModel>();
+
+      Assert.NotNull(userModel);
+      Assert.Equal(_admin.Name, userModel.Name);
     }
   }
 }

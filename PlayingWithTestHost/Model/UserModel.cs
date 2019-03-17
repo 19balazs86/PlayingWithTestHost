@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Newtonsoft.Json;
 
 namespace PlayingWithTestHost.Model
 {
@@ -9,6 +10,7 @@ namespace PlayingWithTestHost.Model
     public string Name { get; }
     public IEnumerable<string> Roles { get; }
 
+    [JsonConstructor]
     public UserModel(string name, IEnumerable<string> roles)
     {
       Name  = name;
