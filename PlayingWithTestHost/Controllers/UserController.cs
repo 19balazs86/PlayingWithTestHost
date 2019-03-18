@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PlayingWithTestHost.Model;
 
@@ -30,6 +31,7 @@ namespace PlayingWithTestHost.Controllers
       return Unauthorized();
     }
 
+    [Authorize]
     [HttpGet("logout")]
     public async Task<IActionResult> Logout()
     {
