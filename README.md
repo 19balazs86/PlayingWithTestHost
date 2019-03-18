@@ -44,10 +44,7 @@ public async Task GetValues(string requestUri, Type objectType)
     // Assert
     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-    // Content.Deserialize: Custom extension for HttpContent.
-    // The response can be quite big. Deserialize the response directly from stream
-    // to avoid allocating more memory, than necessary.
-    object responseObject = await response.Content.Deserialize(objectType);
+    object responseObject = await response.Content.ReadAsAsync(objectType);
 
     Assert.NotNull(responseObject);
 }
