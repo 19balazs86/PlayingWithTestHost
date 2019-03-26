@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Net.Http;
+using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PlayingWithTestHost.Dummy;
+using PlayingWithTestHost.IntegrationTests.Dummy;
 using PlayingWithTestHost.Model;
 
 namespace PlayingWithTestHost.IntegrationTests
@@ -24,7 +25,9 @@ namespace PlayingWithTestHost.IntegrationTests
       IWebHostBuilder builder = new WebHostBuilder()
         .ConfigureAppConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.json"))
         .ConfigureServices(services => services.AddSingleton<ITestUser>(this))
-        .UseStartup<TestStartup>();
+        .UseStartup<TestStartup>()
+        .UseSetting(WebHostDefaults.ApplicationKey, typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+      // Important: UseSetting after UseStartup. Otherwise, the request run on not found.
 
       _testServer = new TestServer(builder);
 

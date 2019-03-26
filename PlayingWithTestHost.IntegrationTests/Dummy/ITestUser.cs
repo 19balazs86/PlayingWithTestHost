@@ -1,6 +1,6 @@
 ﻿using PlayingWithTestHost.Model;
 
-namespace PlayingWithTestHost.Dummy
+namespace PlayingWithTestHost.IntegrationTests.Dummy
 {
   public interface ITestUser
   {
