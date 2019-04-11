@@ -9,10 +9,13 @@ Authentication can causes unauthorized response in the integration test. The exa
 - Microsoft video: [YouTube link.](https://www.youtube.com/watch?v=O3AvN2Rr1uI "YouTube link")
 - Medium article: [Integration Testing in Asp.Net Core.](https://koukia.ca/integration-testing-in-asp-net-core-2-0-51d14ede3968 "Integration Testing in Asp.Net Core")
 - InfoQ article: [How to Test ASP.NET Core Web API.](https://www.infoq.com/articles/testing-aspnet-core-web-api "How to Test ASP.NET Core Web API")
-- Medium article: [Bypassing ASP.NET Core Authorize in integration tests.](https://medium.com/jackwild/bypassing-asp-net-core-2-0-authorize-tags-in-integration-tests-7bda8fcb0eca "Bypassing ASP.NET Core Authorize in integration tests")
 - Microsoft Docs: [Use cookie authentication without ASP.NET Core Identity.](https://docs.microsoft.com/en-ie/aspnet/core/security/authentication/cookie?view=aspnetcore-2.2 "Use cookie authentication without ASP.NET Core Identity")
 
-> Regarding the topic, worth to check the [Alba](http://jasperfx.github.io/alba/getting_started "Alba") - class library to write integration tests.
+##### Authentication solutions in integration test
+- Medium article: [Bypassing ASP.NET Core Authorize in integration tests.](https://medium.com/jackwild/bypassing-asp-net-core-2-0-authorize-tags-in-integration-tests-7bda8fcb0eca "Bypassing ASP.NET Core Authorize in integration tests")
+- Gunnar Peipman blog: [Identity user accounts in integration tests](https://gunnarpeipman.com/testing/aspnet-core-identity-integration-tests/ "Identity user accounts in integration tests") (ActionFilter).
+
+> Regarding this topic, worth to check the [Alba](http://jasperfx.github.io/alba/getting_started "Alba") - class library to write integration tests.
 
 #### WebHostBuilder
 
