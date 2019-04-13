@@ -45,7 +45,7 @@ namespace PlayingWithTestHost.IntegrationTests
     }
 
     [Fact]
-    public async Task CallGetAdminUser_With_NonAdmin()
+    public async Task GetAdminUser_With_NonAdmin()
     {
       // Arrange
       _fixture.TestUser = _user;
@@ -58,7 +58,7 @@ namespace PlayingWithTestHost.IntegrationTests
     }
 
     [Fact]
-    public async Task CallGetAdminUser_With_Admin()
+    public async Task GetAdminUser_With_Admin()
     {
       // Arrange
       _fixture.TestUser = _admin;
@@ -73,6 +73,19 @@ namespace PlayingWithTestHost.IntegrationTests
 
       Assert.NotNull(userModel);
       Assert.Equal(_admin.Name, userModel.Name);
+    }
+
+    [Fact]
+    public async Task Anonymous()
+    {
+      // Arrange
+      _fixture.TestUser = null;
+
+      // Act
+      HttpResponseMessage response = await _fixture.Client.GetAsync("values/anonymous");
+
+      // Assert
+      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
   }
 }
