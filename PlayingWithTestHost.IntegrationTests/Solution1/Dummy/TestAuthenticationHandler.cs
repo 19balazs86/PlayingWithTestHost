@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PlayingWithTestHost.Model;
 
-namespace PlayingWithTestHost.IntegrationTests.Dummy
+namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
 {
   public static class TestAuthenticationExtensions
   {

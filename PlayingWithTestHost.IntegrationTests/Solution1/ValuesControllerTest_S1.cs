@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using PlayingWithTestHost.Model;
 using Xunit;
 
-namespace PlayingWithTestHost.IntegrationTests
+namespace PlayingWithTestHost.IntegrationTests.Solution1
 {
-  public class ValuesControllerTest : IClassFixture<TestServerFixture>
+  public class ValuesControllerTest_S1 : IClassFixture<TestServerFixture>
   {
     private readonly UserModel _user, _admin;
 
     private readonly TestServerFixture _fixture;
 
-    public ValuesControllerTest(TestServerFixture fixture)
+    public ValuesControllerTest_S1(TestServerFixture fixture)
     {
       _fixture = fixture;
 

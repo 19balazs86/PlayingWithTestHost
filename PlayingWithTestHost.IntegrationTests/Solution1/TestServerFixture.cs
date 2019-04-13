@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PlayingWithTestHost.IntegrationTests.Dummy;
+using PlayingWithTestHost.IntegrationTests.Solution1.Dummy;
 using PlayingWithTestHost.Model;
 
-namespace PlayingWithTestHost.IntegrationTests
+namespace PlayingWithTestHost.IntegrationTests.Solution1
 {
   public class TestServerFixture : IDisposable, ITestUser
   {
@@ -23,6 +23,7 @@ namespace PlayingWithTestHost.IntegrationTests
       // Use TestStartup class from the API Host project to configure the test server.
       // If you use Startup instead of TestStartup, you will have authentication issue.
       IWebHostBuilder builder = new WebHostBuilder()
+        //.UseEnvironment(EnvironmentName.Development)
         .ConfigureAppConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.json"))
         .ConfigureServices(services => services.AddSingleton<ITestUser>(this))
         .UseStartup<TestStartup>()

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace PlayingWithTestHost.IntegrationTests.Dummy
+namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
 {
   public class TestStartup : Startup
   {
@@ -19,7 +19,7 @@ namespace PlayingWithTestHost.IntegrationTests.Dummy
       services.AddAuthentication(options =>
       {
         options.DefaultAuthenticateScheme = AuthScheme;
-        options.DefaultChallengeScheme    = AuthScheme;
+        options.DefaultChallengeScheme = AuthScheme;
       })
       .AddTestAuth(o => o.TestUserFunc = () => _testUser.TestUser);
     }
