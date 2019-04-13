@@ -2,7 +2,7 @@
 
 namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
 {
-  public interface ITestUser
+  public interface ITestUserProvider
   {
     UserModel TestUser { get; set; }
   }

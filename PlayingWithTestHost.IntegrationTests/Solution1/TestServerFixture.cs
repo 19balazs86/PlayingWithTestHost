@@ -10,7 +10,7 @@ using PlayingWithTestHost.Model;
 
 namespace PlayingWithTestHost.IntegrationTests.Solution1
 {
-  public class TestServerFixture : IDisposable, ITestUser
+  public class TestServerFixture : IDisposable, ITestUserProvider
   {
     public UserModel TestUser { get; set; }
 
@@ -25,7 +25,7 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
       IWebHostBuilder builder = new WebHostBuilder()
         //.UseEnvironment(EnvironmentName.Development)
         .ConfigureAppConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.json"))
-        .ConfigureServices(services => services.AddSingleton<ITestUser>(this))
+        .ConfigureServices(services => services.AddSingleton<ITestUserProvider>(this))
         .UseStartup<TestStartup>()
         .UseSetting(WebHostDefaults.ApplicationKey, typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
       // Important: UseSetting after UseStartup. Otherwise, the request run on not found.

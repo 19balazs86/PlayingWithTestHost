@@ -7,11 +7,11 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
   {
     public static readonly string AuthScheme = "Test Scheme";
 
-    private readonly ITestUser _testUser;
+    private readonly ITestUserProvider _testUserProvider;
 
-    public TestStartup(IConfiguration configuration, ITestUser testUser) : base(configuration)
+    public TestStartup(IConfiguration configuration, ITestUserProvider testUserProvider) : base(configuration)
     {
-      _testUser = testUser;
+      _testUserProvider = testUserProvider;
     }
 
     protected override void ConfigureAuthentication(IServiceCollection services)
@@ -21,7 +21,7 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
         options.DefaultAuthenticateScheme = AuthScheme;
         options.DefaultChallengeScheme = AuthScheme;
       })
-      .AddTestAuth(o => o.TestUserFunc = () => _testUser.TestUser);
+      .AddTestAuth(o => o.TestUserFunc = () => _testUserProvider.TestUser);
     }
   }
 }
