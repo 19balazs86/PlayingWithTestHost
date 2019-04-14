@@ -12,28 +12,26 @@ namespace PlayingWithTestHost
   {
     public IConfiguration Configuration { get; }
 
-    public Startup(IConfiguration configuration)
-    {
-      Configuration = configuration;
-    }
+    public Startup(IConfiguration configuration) => Configuration = configuration;
 
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-      // -> Setup the authentication.
+      // --> Setup the authentication.
       ConfigureAuthentication(services);
 
-      // -> BindTo: use the custom extension.
+      // --> BindTo: use the custom extension.
       services.AddSingleton(Configuration.BindTo<TestConfig>());
+
+      // --> Add IValueProvider and override it in the unit test.
+      services.AddSingleton<IValueProvider, ValueProvider>();
     }
 
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
       if (env.IsDevelopment())
-      {
         app.UseDeveloperExceptionPage();
-      }
 
       app.UseAuthentication();
 

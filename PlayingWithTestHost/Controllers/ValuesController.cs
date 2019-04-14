@@ -11,8 +11,13 @@ namespace PlayingWithTestHost.Controllers
   public class ValuesController : ControllerBase
   {
     private readonly TestConfig _testConfig;
+    private readonly IValueProvider _valueProvider;
 
-    public ValuesController(TestConfig testConfig) => _testConfig = testConfig;
+    public ValuesController(TestConfig testConfig, IValueProvider valueProvider)
+    {
+      _testConfig    = testConfig;
+      _valueProvider = valueProvider;
+    }
 
     [HttpGet]
     public ActionResult<IEnumerable<string>> Get() => new string[] { "value1", "value2" };
@@ -26,6 +31,9 @@ namespace PlayingWithTestHost.Controllers
     [Authorize(Roles = "Admin")]
     [HttpGet("admin")]
     public ActionResult<UserModel> GetAdminUserValues() => new UserModel(User.Claims);
+
+    [HttpGet("value-provider")]
+    public ActionResult<string> GetValueProvider() => _valueProvider.GetValue();
 
     [AllowAnonymous]
     [HttpGet("anonymous")]

@@ -116,6 +116,57 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "ValueProvider",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5000/Values/value-provider",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"Values",
+						"value-provider"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Anonymous",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5000/Values/anonymous",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"Values",
+						"anonymous"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

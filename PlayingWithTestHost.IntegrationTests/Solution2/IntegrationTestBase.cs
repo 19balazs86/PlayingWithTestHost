@@ -30,6 +30,8 @@ namespace PlayingWithTestHost.IntegrationTests.Solution2
           //.ConfigureAppConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.json"))
           .ConfigureTestServices(services =>
           {
+            services.AddSingleton<IValueProvider, FakeValueProvider>();
+
             if (user is null) return;
 
             services.AddMvc(options =>

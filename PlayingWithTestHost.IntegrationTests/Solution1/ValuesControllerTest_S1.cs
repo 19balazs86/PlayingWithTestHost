@@ -76,6 +76,17 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
     }
 
     [Fact]
+    public async Task GetValueProvider()
+    {
+      // Act
+      HttpResponseMessage response = await _fixture.Client.GetAsync("values/value-provider");
+
+      // Assert
+      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+      Assert.Equal(FakeValueProvider.Value, await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
     public async Task Anonymous()
     {
       // Arrange
