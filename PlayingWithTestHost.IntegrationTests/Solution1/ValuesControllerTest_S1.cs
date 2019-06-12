@@ -26,15 +26,13 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
     [InlineData("values",         typeof(IEnumerable<string>))]
     [InlineData("values/config",  typeof(TestConfig))]
     [InlineData("values/user",    typeof(UserModel))]
-    public async Task GetValues(string requestUri, Type objectType)
+    public async Task GetValues(string requestPath, Type objectType)
     {
       // Arrange
       _fixture.TestUser = _user;
-
-      HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("GET"), requestUri);
-
+      
       // Act
-      HttpResponseMessage response = await _fixture.Client.SendAsync(request);
+      HttpResponseMessage response = await _fixture.Client.GetAsync(requestPath);
       
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
