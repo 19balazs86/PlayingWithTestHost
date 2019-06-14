@@ -37,7 +37,7 @@ namespace PlayingWithTestHost.Controllers
     {
       await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-      return NoContent();
+      return Ok();
     }
   }
 }

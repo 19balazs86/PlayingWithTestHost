@@ -17,7 +17,7 @@ namespace PlayingWithTestHost.IntegrationTests
 
     public ValuesControllerTest_S2(WebApplicationFactory<Startup> factory) : base(factory)
     {
-      _user  = new UserModel("Test user", new[] { "User" });
+      _user = new UserModel("Test user", new[] { "User" });
 
       _httpClient = createClientFor(_user);
     }

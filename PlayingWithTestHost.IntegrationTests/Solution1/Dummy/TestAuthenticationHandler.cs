@@ -14,7 +14,7 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
   {
     public static AuthenticationBuilder AddTestAuth(this AuthenticationBuilder builder, Action<TestAuthenticationOptions> configureOptions)
     {
-      return builder.AddScheme<TestAuthenticationOptions, TestAuthenticationHandler>(TestStartup.AuthScheme, "Test Auth", configureOptions);
+      return builder.AddScheme<TestAuthenticationOptions, TestAuthenticationHandler>(TestStartup.AuthScheme, configureOptions);
     }
   }
 
@@ -54,7 +54,7 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
 
       if (claims is null) return null;
 
-      return new ClaimsIdentity(claims, "test");
+      return new ClaimsIdentity(claims, TestStartup.AuthScheme);
     }
   }
 }

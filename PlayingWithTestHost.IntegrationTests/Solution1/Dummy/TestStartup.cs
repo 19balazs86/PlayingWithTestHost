@@ -5,7 +5,7 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
 {
   public class TestStartup : Startup
   {
-    public static readonly string AuthScheme = "Test Scheme";
+    public static readonly string AuthScheme = "TestAuthScheme";
 
     private readonly ITestUserProvider _testUserProvider;
 
@@ -19,7 +19,7 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
       services.AddAuthentication(options =>
       {
         options.DefaultAuthenticateScheme = AuthScheme;
-        options.DefaultChallengeScheme = AuthScheme;
+        options.DefaultChallengeScheme    = AuthScheme;
       })
       .AddTestAuth(o => o.TestUserFunc = () => _testUserProvider.TestUser);
     }
