@@ -74,6 +74,9 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
     [Fact]
     public async Task GetValueProvider()
     {
+      // Arrange
+      _testUser = _user;
+
       // Act
       HttpResponseMessage response = await _httpClient.GetAsync("values/value-provider");
 

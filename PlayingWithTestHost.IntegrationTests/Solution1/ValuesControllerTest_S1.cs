@@ -76,6 +76,9 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
     [Fact]
     public async Task GetValueProvider()
     {
+      // Arrange
+      _fixture.TestUser = _user;
+
       // Act
       HttpResponseMessage response = await _fixture.Client.GetAsync("values/value-provider");
 
