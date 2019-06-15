@@ -10,7 +10,7 @@ using Xunit;
 
 namespace PlayingWithTestHost.IntegrationTests
 {
-  public class ValuesControllerTest_S2 : IntegrationTestBase
+  public class ValuesControllerTest_S2 : IntegrationTestBase_S2
   {
     private readonly UserModel _user;
     private readonly HttpClient _httpClient;

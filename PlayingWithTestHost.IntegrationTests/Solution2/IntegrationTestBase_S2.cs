@@ -8,11 +8,11 @@ using Xunit;
 
 namespace PlayingWithTestHost.IntegrationTests.Solution2
 {
-  public class IntegrationTestBase : IClassFixture<WebApplicationFactory<Startup>>
+  public class IntegrationTestBase_S2 : IClassFixture<WebApplicationFactory<Startup>>
   {
     protected readonly WebApplicationFactory<Startup> _factory;
 
-    public IntegrationTestBase(WebApplicationFactory<Startup> factory)
+    public IntegrationTestBase_S2(WebApplicationFactory<Startup> factory)
     {
       _factory = factory;
     }
