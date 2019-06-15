@@ -10,15 +10,15 @@ using PlayingWithTestHost.Model;
 
 namespace PlayingWithTestHost.IntegrationTests.Solution1
 {
-  public class TestServerFixture : IDisposable, ITestUserProvider
+  public class IntegrationTestBase_S1 : IDisposable, ITestUserProvider
   {
     public UserModel TestUser { get; set; }
 
-    public HttpClient Client { get; }
+    protected readonly HttpClient _client;
 
     private readonly TestServer _testServer;
 
-    public TestServerFixture()
+    public IntegrationTestBase_S1()
     {
       // Services can be overridden in a test with a call to ConfigureTestServices on the host builder.
 
@@ -35,12 +35,12 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
 
       _testServer = new TestServer(builder);
 
-      Client = _testServer.CreateClient();
+      _client = _testServer.CreateClient();
     }
 
     public void Dispose()
     {
-      Client.Dispose();
+      _client.Dispose();
 
       _testServer.Dispose();
     }
