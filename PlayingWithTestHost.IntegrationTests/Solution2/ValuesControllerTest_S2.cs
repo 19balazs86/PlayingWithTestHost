@@ -12,12 +12,13 @@ namespace PlayingWithTestHost.IntegrationTests
 {
   public class ValuesControllerTest_S2 : IntegrationTestBase_S2
   {
-    private readonly UserModel _user;
+    private readonly UserModel _user, _admin;
     private readonly HttpClient _httpClient;
 
     public ValuesControllerTest_S2(WebApplicationFactory<Startup> factory) : base(factory)
     {
-      _user = new UserModel("Test user", new[] { "User" });
+      _user  = new UserModel("Test user", new[] { "User" });
+      _admin = new UserModel("Test admin", new[] { "Admin" });
 
       _httpClient = createClientFor(_user);
     }
@@ -57,23 +58,23 @@ namespace PlayingWithTestHost.IntegrationTests
     //}
 
     // The test is passed no matter the user is admin or not.
-    //[Fact]
-    //public async Task GetAdminUser_With_Admin()
-    //{
-    //  // Arrange
-    //  HttpClient httpClient = createClientFor(_admin);
+    [Fact]
+    public async Task GetAdminUser_With_Admin()
+    {
+      // Arrange
+      HttpClient httpClient = createClientFor(_admin);
 
-    //  // Act
-    //  HttpResponseMessage response = await httpClient.GetAsync("values/admin");
+      // Act
+      HttpResponseMessage response = await httpClient.GetAsync("values/admin");
 
-    //  // Assert
-    //  Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+      // Assert
+      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-    //  UserModel userModel = await response.Content.ReadAsAsync<UserModel>();
+      UserModel userModel = await response.Content.ReadAsAsync<UserModel>();
 
-    //  Assert.NotNull(userModel);
-    //  Assert.Equal(_admin.Name, userModel.Name);
-    //}
+      Assert.NotNull(userModel);
+      Assert.Equal(_admin.Name, userModel.Name);
+    }
 
     [Fact]
     public async Task GetValueProvider()

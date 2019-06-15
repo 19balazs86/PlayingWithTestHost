@@ -53,23 +53,23 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
     //}
 
     // The test is passed no matter the user is admin or not.
-    //[Fact]
-    //public async Task GetAdminUser_With_Admin()
-    //{
-    //  // Arrange
-    //  _testUser = _admin;
+    [Fact]
+    public async Task GetAdminUser_With_Admin()
+    {
+      // Arrange
+      _testUser = _admin;
 
-    //  // Act
-    //  HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
+      // Act
+      HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
 
-    //  // Assert
-    //  Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+      // Assert
+      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-    //  UserModel userModel = await response.Content.ReadAsAsync<UserModel>();
+      UserModel userModel = await response.Content.ReadAsAsync<UserModel>();
 
-    //  Assert.NotNull(userModel);
-    //  Assert.Equal(_admin.Name, userModel.Name);
-    //}
+      Assert.NotNull(userModel);
+      Assert.Equal(_admin.Name, userModel.Name);
+    }
 
     [Fact]
     public async Task GetValueProvider()
