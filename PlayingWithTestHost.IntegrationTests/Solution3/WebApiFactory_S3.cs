@@ -9,13 +9,13 @@ using PlayingWithTestHost.Model;
 
 namespace PlayingWithTestHost.IntegrationTests.Solution3
 {
-  public class WebApiFactory : WebApplicationFactory<Startup>
+  public class WebApiFactory_S3 : WebApplicationFactory<Startup>
   {
     public UserModel TestUser { get; set; }
 
-    protected readonly Func<UserModel> _testUserFunc;
+    private readonly Func<UserModel> _testUserFunc;
 
-    public WebApiFactory()
+    public WebApiFactory_S3()
     {
       _testUserFunc = () => TestUser;
     }

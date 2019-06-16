@@ -12,7 +12,7 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
   {
     private readonly UserModel _user, _admin;
 
-    public ValuesControllerTest_S3(WebApiFactory webApiFactory) : base(webApiFactory)
+    public ValuesControllerTest_S3(WebApiFactory_S3 webApiFactory) : base(webApiFactory)
     {
       _user  = new UserModel("Test user",  new[] { "User" });
       _admin = new UserModel("Test admin", new[] { "Admin" });
