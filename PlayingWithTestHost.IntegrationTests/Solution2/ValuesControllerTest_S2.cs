@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
 using PlayingWithTestHost.IntegrationTests.Solution2;
 using PlayingWithTestHost.Model;
 using Xunit;
@@ -14,7 +13,7 @@ namespace PlayingWithTestHost.IntegrationTests
   {
     private readonly UserModel _user, _admin;
 
-    public ValuesControllerTest_S2(WebApplicationFactory<Startup> factory) : base(factory)
+    public ValuesControllerTest_S2(WebApiFactory_S2 webApiFactory) : base(webApiFactory)
     {
       _user  = new UserModel("Test user", new[] { "User" });
       _admin = new UserModel("Test admin", new[] { "Admin" });
@@ -27,12 +26,12 @@ namespace PlayingWithTestHost.IntegrationTests
     public async Task GetValues(string requestUri, Type objectType)
     {
       // Arrange
-      HttpClient httpClient = createClientFor(_user);
+      _testUser = _user;
 
       HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("GET"), requestUri);
 
       // Act
-      HttpResponseMessage response = await httpClient.SendAsync(request);
+      HttpResponseMessage response = await _httpClient.SendAsync(request);
       
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -48,12 +47,10 @@ namespace PlayingWithTestHost.IntegrationTests
     public async Task GetValuesForUser(bool isAdmin)
     {
       // Arrange
-      UserModel testUser = isAdmin ? _admin : _user;
-
-      HttpClient httpClient = createClientFor(testUser);
+      _testUser = isAdmin ? _admin : _user;
 
       // Act
-      HttpResponseMessage response = await httpClient.GetAsync("values/user");
+      HttpResponseMessage response = await _httpClient.GetAsync("values/user");
 
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -61,7 +58,7 @@ namespace PlayingWithTestHost.IntegrationTests
       UserModel userModel = await response.Content.ReadAsAsync<UserModel>();
 
       Assert.NotNull(userModel);
-      Assert.Equal(testUser.Name, userModel.Name);
+      Assert.Equal(_testUser.Name, userModel.Name);
     }
 
     // This will fail: Authentication mechanism is overwritten in IntegrationTestBase.
@@ -83,10 +80,10 @@ namespace PlayingWithTestHost.IntegrationTests
     public async Task GetAdminUser_With_Admin()
     {
       // Arrange
-      HttpClient httpClient = createClientFor(_admin);
+      _testUser = _admin;
 
       // Act
-      HttpResponseMessage response = await httpClient.GetAsync("values/admin");
+      HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
 
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -101,9 +98,9 @@ namespace PlayingWithTestHost.IntegrationTests
     public async Task GetValueProvider()
     {
       // Act
-      HttpClient httpClient = createClientFor(_user);
+      _testUser = _user;
 
-      HttpResponseMessage response = await httpClient.GetAsync("values/value-provider");
+      HttpResponseMessage response = await _httpClient.GetAsync("values/value-provider");
 
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -114,10 +111,10 @@ namespace PlayingWithTestHost.IntegrationTests
     public async Task Anonymous()
     {
       // Arrange
-      HttpClient httpClient = createClientFor(user: null);
+      _testUser = null;
 
       // Act
-      HttpResponseMessage response = await httpClient.GetAsync("values/anonymous");
+      HttpResponseMessage response = await _httpClient.GetAsync("values/anonymous");
 
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);

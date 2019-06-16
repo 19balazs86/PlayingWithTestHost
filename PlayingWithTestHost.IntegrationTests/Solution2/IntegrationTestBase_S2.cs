@@ -1,49 +1,54 @@
 ﻿using System.Net.Http;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
 using PlayingWithTestHost.Model;
 using Xunit;
 
 namespace PlayingWithTestHost.IntegrationTests.Solution2
 {
-  public class IntegrationTestBase_S2 : IClassFixture<WebApplicationFactory<Startup>>
+  public class IntegrationTestBase_S2 : IClassFixture<WebApiFactory_S2>
   {
-    protected readonly WebApplicationFactory<Startup> _factory;
+    protected readonly WebApiFactory_S2 _webApiFactory;
 
-    public IntegrationTestBase_S2(WebApplicationFactory<Startup> factory)
+    protected UserModel _testUser { get => _webApiFactory.TestUser; set => _webApiFactory.TestUser = value; }
+
+    protected readonly HttpClient _httpClient;
+
+    public IntegrationTestBase_S2(WebApiFactory_S2 webApiFactory)
     {
-      _factory = factory;
+      _webApiFactory = webApiFactory;
+
+      _httpClient = _webApiFactory.CreateClient();
     }
 
-    protected virtual HttpClient createClientFor(
-      UserModel user = null,
-      WebApplicationFactoryClientOptions clientOptions = null)
-    {
-      WebApplicationFactory<Startup> factory = _factory.WithWebHostBuilder(builder =>
-      {
-        // Services can be overridden in a test with a call to ConfigureTestServices on the host builder.
+    //protected virtual HttpClient createClientFor(
+    //  UserModel user = null,
+    //  WebApplicationFactoryClientOptions clientOptions = null)
+    //{
+    //  // In the previous solution the _factory was WebApplicationFactory<Startup>
+    //  // and the base class : IClassFixture<WebApplicationFactory<Startup>>
 
-        builder
-          //.UseEnvironment(EnvironmentName.Development)
-          //.ConfigureAppConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.json"))
-          .ConfigureTestServices(services =>
-          {
-            services.AddSingleton<IValueProvider, FakeValueProvider>();
+    //  WebApplicationFactory<Startup> factory = _factory.WithWebHostBuilder(builder =>
+    //  {
+    //    // Services can be overridden in a test with a call to ConfigureTestServices on the host builder.
 
-            if (user is null) return;
+    //    builder
+    //      //.UseEnvironment(EnvironmentName.Development)
+    //      //.ConfigureAppConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.json"))
+    //      .ConfigureTestServices(services =>
+    //      {
+    //        services.AddSingleton<IValueProvider, FakeValueProvider>();
 
-            services.AddMvc(options =>
-            {
-              options.Filters.Add(new AllowAnonymousFilter());
-              options.Filters.Add(new FakeUserFilter(user));
-            });
-            //.AddApplicationPart(typeof(Startup).Assembly);
-          });
-      });
+    //        if (user is null) return;
 
-      return clientOptions is null ? factory.CreateClient() : factory.CreateClient(clientOptions);
-    }
+    //        services.AddMvc(options =>
+    //        {
+    //          options.Filters.Add(new AllowAnonymousFilter());
+    //          options.Filters.Add(new FakeUserFilter(user));
+    //        });
+    //        //.AddApplicationPart(typeof(Startup).Assembly);
+    //      });
+    //  });
+
+    //  return clientOptions is null ? factory.CreateClient() : factory.CreateClient(clientOptions);
+    //}
   }
 }
