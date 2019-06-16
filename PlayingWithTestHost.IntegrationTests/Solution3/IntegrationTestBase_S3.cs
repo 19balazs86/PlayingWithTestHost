@@ -8,15 +8,13 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
   {
     private readonly WebApiFactory _webApiFactory;
 
-    protected UserModel _testUser { get; set; }
+    protected UserModel _testUser { get => _webApiFactory.TestUser; set => _webApiFactory.TestUser = value; }
 
     protected readonly HttpClient _httpClient;
 
     public IntegrationTestBase_S3(WebApiFactory webApiFactory)
     {
       _webApiFactory = webApiFactory;
-
-      _webApiFactory.TestUserFunc = () => _testUser;
 
       _httpClient = _webApiFactory.CreateClient();
     }

@@ -11,7 +11,14 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
 {
   public class WebApiFactory : WebApplicationFactory<Startup>
   {
-    public Func<UserModel> TestUserFunc { get; set; }
+    public UserModel TestUser { get; set; }
+
+    protected readonly Func<UserModel> _testUserFunc;
+
+    public WebApiFactory()
+    {
+      _testUserFunc = () => TestUser;
+    }
 
     protected override IWebHostBuilder CreateWebHostBuilder()
     {
@@ -27,7 +34,7 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
             options.DefaultAuthenticateScheme = TestStartup.AuthScheme;
             options.DefaultChallengeScheme    = TestStartup.AuthScheme;
           })
-          .AddTestAuth(o => o.TestUserFunc = TestUserFunc);
+          .AddTestAuth(o => o.TestUserFunc = _testUserFunc);
         })
         .UseStartup<Startup>();
     }
