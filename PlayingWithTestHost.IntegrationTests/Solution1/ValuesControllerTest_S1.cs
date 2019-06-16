@@ -38,6 +38,26 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
       Assert.NotNull(responseObject);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task GetValuesForUser(bool isAdmin)
+    {
+      // Arrange
+      TestUser = isAdmin ? _admin : _user;
+
+      // Act
+      HttpResponseMessage response = await _client.GetAsync("values/user");
+
+      // Assert
+      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+      UserModel userModel = await response.Content.ReadAsAsync<UserModel>();
+
+      Assert.NotNull(userModel);
+      Assert.Equal(TestUser.Name, userModel.Name);
+    }
+
     [Fact]
     public async Task GetAdminUser_With_NonAdmin()
     {

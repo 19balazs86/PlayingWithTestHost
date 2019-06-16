@@ -13,14 +13,11 @@ namespace PlayingWithTestHost.IntegrationTests
   public class ValuesControllerTest_S2 : IntegrationTestBase_S2
   {
     private readonly UserModel _user, _admin;
-    private readonly HttpClient _httpClient;
 
     public ValuesControllerTest_S2(WebApplicationFactory<Startup> factory) : base(factory)
     {
       _user  = new UserModel("Test user", new[] { "User" });
       _admin = new UserModel("Test admin", new[] { "Admin" });
-
-      _httpClient = createClientFor(_user);
     }
 
     [Theory]
@@ -30,10 +27,12 @@ namespace PlayingWithTestHost.IntegrationTests
     public async Task GetValues(string requestUri, Type objectType)
     {
       // Arrange
+      HttpClient httpClient = createClientFor(_user);
+
       HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("GET"), requestUri);
 
       // Act
-      HttpResponseMessage response = await _httpClient.SendAsync(request);
+      HttpResponseMessage response = await httpClient.SendAsync(request);
       
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -41,6 +40,28 @@ namespace PlayingWithTestHost.IntegrationTests
       object responseObject = await response.Content.ReadAsAsync(objectType);
 
       Assert.NotNull(responseObject);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task GetValuesForUser(bool isAdmin)
+    {
+      // Arrange
+      UserModel testUser = isAdmin ? _admin : _user;
+
+      HttpClient httpClient = createClientFor(testUser);
+
+      // Act
+      HttpResponseMessage response = await httpClient.GetAsync("values/user");
+
+      // Assert
+      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+      UserModel userModel = await response.Content.ReadAsAsync<UserModel>();
+
+      Assert.NotNull(userModel);
+      Assert.Equal(testUser.Name, userModel.Name);
     }
 
     // This will fail: Authentication mechanism is overwritten in IntegrationTestBase.
@@ -80,7 +101,9 @@ namespace PlayingWithTestHost.IntegrationTests
     public async Task GetValueProvider()
     {
       // Act
-      HttpResponseMessage response = await _httpClient.GetAsync("values/value-provider");
+      HttpClient httpClient = createClientFor(_user);
+
+      HttpResponseMessage response = await httpClient.GetAsync("values/value-provider");
 
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);

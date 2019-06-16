@@ -38,6 +38,26 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
       Assert.NotNull(responseObject);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task GetValuesForUser(bool isAdmin)
+    {
+      // Arrange
+      _testUser = isAdmin ? _admin : _user;
+
+      // Act
+      HttpResponseMessage response = await _httpClient.GetAsync("values/user");
+
+      // Assert
+      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+      UserModel userModel = await response.Content.ReadAsAsync<UserModel>();
+
+      Assert.NotNull(userModel);
+      Assert.Equal(_testUser.Name, userModel.Name);
+    }
+
     // This will fail: Authentication mechanism is overwritten in IntegrationTestBase.
     //[Fact]
     //public async Task GetAdminUser_With_NonAdmin()
