@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -13,11 +14,15 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
   {
     public UserModel TestUser { get; set; }
 
+    public HttpClient HttpClient { get; private set; }
+
     private readonly Func<UserModel> _testUserFunc;
 
     public WebApiFactory_S3()
     {
       _testUserFunc = () => TestUser;
+
+      HttpClient = CreateClient();
     }
 
     protected override IWebHostBuilder CreateWebHostBuilder()

@@ -10,13 +10,11 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
 
     protected UserModel _testUser { get => _webApiFactory.TestUser; set => _webApiFactory.TestUser = value; }
 
-    protected readonly HttpClient _httpClient;
+    protected HttpClient _httpClient => _webApiFactory.HttpClient;
 
     public IntegrationTestBase_S3(WebApiFactory_S3 webApiFactory)
     {
       _webApiFactory = webApiFactory;
-
-      _httpClient = _webApiFactory.CreateClient();
     }
   }
 }

@@ -20,9 +20,9 @@ namespace PlayingWithTestHost.IntegrationTests
     }
 
     [Theory]
-    [InlineData("values",         typeof(IEnumerable<string>))]
-    [InlineData("values/config",  typeof(TestConfig))]
-    [InlineData("values/user",    typeof(UserModel))]
+    [InlineData("values",        typeof(IEnumerable<string>))]
+    [InlineData("values/config", typeof(TestConfig))]
+    [InlineData("values/user",   typeof(UserModel))]
     public async Task GetValues(string requestUri, Type objectType)
     {
       // Arrange

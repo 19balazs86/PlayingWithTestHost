@@ -8,12 +8,16 @@ using Xunit;
 
 namespace PlayingWithTestHost.IntegrationTests.Solution1
 {
-  public class ValuesControllerTest_S1 : IntegrationTestBase_S1
+  public class ValuesControllerTest_S1 : IClassFixture<TestServerFixture>
   {
     private readonly UserModel _user, _admin;
 
-    public ValuesControllerTest_S1()
+    private readonly TestServerFixture _fixture;
+
+    public ValuesControllerTest_S1(TestServerFixture fixture)
     {
+      _fixture = fixture;
+
       _user  = new UserModel("Test user",  new[] { "User" });
       _admin = new UserModel("Test admin", new[] { "Admin" });
     }
@@ -25,10 +29,10 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
     public async Task GetValues(string requestPath, Type objectType)
     {
       // Arrange
-      TestUser = _user;
+      _fixture.TestUser = _user;
       
       // Act
-      HttpResponseMessage response = await _client.GetAsync(requestPath);
+      HttpResponseMessage response = await _fixture.HttpClient.GetAsync(requestPath);
       
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -44,10 +48,10 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
     public async Task GetValuesForUser(bool isAdmin)
     {
       // Arrange
-      TestUser = isAdmin ? _admin : _user;
+      _fixture.TestUser = isAdmin ? _admin : _user;
 
       // Act
-      HttpResponseMessage response = await _client.GetAsync("values/user");
+      HttpResponseMessage response = await _fixture.HttpClient.GetAsync("values/user");
 
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -55,17 +59,17 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
       UserModel userModel = await response.Content.ReadAsAsync<UserModel>();
 
       Assert.NotNull(userModel);
-      Assert.Equal(TestUser.Name, userModel.Name);
+      Assert.Equal(_fixture.TestUser.Name, userModel.Name);
     }
 
     [Fact]
     public async Task GetAdminUser_With_NonAdmin()
     {
       // Arrange
-      TestUser = _user;
+      _fixture.TestUser = _user;
 
       // Act
-      HttpResponseMessage response = await _client.GetAsync("values/admin");
+      HttpResponseMessage response = await _fixture.HttpClient.GetAsync("values/admin");
 
       // Assert
       Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -75,10 +79,10 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
     public async Task GetAdminUser_With_Admin()
     {
       // Arrange
-      TestUser = _admin;
+      _fixture.TestUser = _admin;
 
       // Act
-      HttpResponseMessage response = await _client.GetAsync("values/admin");
+      HttpResponseMessage response = await _fixture.HttpClient.GetAsync("values/admin");
 
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -93,10 +97,10 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
     public async Task GetValueProvider()
     {
       // Arrange
-      TestUser = _user;
+      _fixture.TestUser = _user;
 
       // Act
-      HttpResponseMessage response = await _client.GetAsync("values/value-provider");
+      HttpResponseMessage response = await _fixture.HttpClient.GetAsync("values/value-provider");
 
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -107,10 +111,10 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
     public async Task Anonymous()
     {
       // Arrange
-      TestUser = null;
+      _fixture.TestUser = null;
 
       // Act
-      HttpResponseMessage response = await _client.GetAsync("values/anonymous");
+      HttpResponseMessage response = await _fixture.HttpClient.GetAsync("values/anonymous");
 
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
