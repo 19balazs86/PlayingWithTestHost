@@ -21,7 +21,7 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
         options.DefaultAuthenticateScheme = AuthScheme;
         options.DefaultChallengeScheme    = AuthScheme;
       })
-      .AddTestAuth(o => o.TestUserFunc = () => _testUserProvider.TestUser);
+      .AddTestAuth(o => o.TestUserClaimsFunc = () => _testUserProvider.TestUser?.ToClaims());
     }
   }
 }

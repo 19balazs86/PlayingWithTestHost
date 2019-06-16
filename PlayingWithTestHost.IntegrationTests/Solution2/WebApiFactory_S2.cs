@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -16,12 +15,8 @@ namespace PlayingWithTestHost.IntegrationTests.Solution2
 
     public HttpClient HttpClient { get; private set; }
 
-    private readonly Func<UserModel> _testUserFunc;
-
     public WebApiFactory_S2()
     {
-      _testUserFunc = () => TestUser;
-
       HttpClient = CreateClient();
     }
 
@@ -37,7 +32,7 @@ namespace PlayingWithTestHost.IntegrationTests.Solution2
           services.AddMvc(options =>
           {
             options.Filters.Add(new AllowAnonymousFilter());
-            options.Filters.Add(new FakeUserFilter(_testUserFunc));
+            options.Filters.Add(new FakeUserFilter(() => TestUser?.ToClaims()));
           });
         })
         .UseStartup<Startup>();

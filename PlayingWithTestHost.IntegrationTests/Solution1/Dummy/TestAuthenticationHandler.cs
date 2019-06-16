@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PlayingWithTestHost.Model;
 
 namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
 {
@@ -46,11 +45,11 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
 
   public class TestAuthenticationOptions : AuthenticationSchemeOptions
   {
-    public Func<UserModel> TestUserFunc { get; set; }
+    public Func<IEnumerable<Claim>> TestUserClaimsFunc { get; set; }
 
     public ClaimsIdentity Identity()
     {
-      IEnumerable<Claim> claims = TestUserFunc?.Invoke()?.ToClaims();
+      IEnumerable<Claim> claims = TestUserClaimsFunc?.Invoke();
 
       if (claims is null) return null;
 

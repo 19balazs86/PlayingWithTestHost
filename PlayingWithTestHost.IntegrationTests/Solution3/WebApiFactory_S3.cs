@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -16,12 +15,8 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
 
     public HttpClient HttpClient { get; private set; }
 
-    private readonly Func<UserModel> _testUserFunc;
-
     public WebApiFactory_S3()
     {
-      _testUserFunc = () => TestUser;
-
       HttpClient = CreateClient();
     }
 
@@ -39,7 +34,7 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
             options.DefaultAuthenticateScheme = TestStartup.AuthScheme;
             options.DefaultChallengeScheme    = TestStartup.AuthScheme;
           })
-          .AddTestAuth(o => o.TestUserFunc = _testUserFunc);
+          .AddTestAuth(o => o.TestUserClaimsFunc = () => TestUser?.ToClaims());
         })
         .UseStartup<Startup>();
     }
