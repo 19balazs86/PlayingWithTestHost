@@ -15,6 +15,8 @@ namespace PlayingWithTestHost.IntegrationTests.Solution3
     public IntegrationTestBase_S3(WebApiFactory_S3 webApiFactory)
     {
       _webApiFactory = webApiFactory;
+
+      _testUser = null;
     }
   }
 }

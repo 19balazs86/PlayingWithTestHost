@@ -18,6 +18,8 @@ namespace PlayingWithTestHost.IntegrationTests.Solution1
     {
       _fixture = fixture;
 
+      _fixture.TestUser = null;
+
       _user  = new UserModel("Test user",  new[] { "User" });
       _admin = new UserModel("Test admin", new[] { "Admin" });
     }

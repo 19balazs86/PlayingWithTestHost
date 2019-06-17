@@ -15,6 +15,8 @@ namespace PlayingWithTestHost.IntegrationTests.Solution2
     public IntegrationTestBase_S2(WebApiFactory_S2 webApiFactory)
     {
       _webApiFactory = webApiFactory;
+
+      _testUser = null;
     }
 
     //protected virtual HttpClient createClientFor(
