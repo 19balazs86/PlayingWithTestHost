@@ -50,6 +50,12 @@ namespace PlayingWithTestHost
             context.Response.StatusCode = 401;
             return Task.CompletedTask;
           };
+
+          o.Events.OnRedirectToAccessDenied = context =>
+          {
+            context.Response.StatusCode = 403;
+            return Task.CompletedTask;
+          };
         });
     }
   }

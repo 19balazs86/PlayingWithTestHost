@@ -59,19 +59,18 @@ namespace IntegrationTests.Solution3
       Assert.Equal(_testUser.Name, userModel.Name);
     }
 
-    // This will fail: Authentication mechanism is overwritten in IntegrationTestBase.
-    //[Fact]
-    //public async Task GetAdminUser_With_NonAdmin()
-    //{
-    //  // Arrange
-    //  _testUser = _user;
+    [Fact]
+    public async Task GetAdminUser_With_NonAdmin()
+    {
+      // Arrange
+      _testUser = _user;
 
-    //  // Act
-    //  HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
+      // Act
+      HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
 
-    //  // Assert
-    //  Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-    //}
+      // Assert
+      Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
 
     // The test is passed no matter the user is admin or not.
     [Fact]

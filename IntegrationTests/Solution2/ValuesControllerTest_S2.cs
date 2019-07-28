@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using IntegrationTests.Solution2;
 using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 using Xunit;
 
-namespace IntegrationTests
+namespace IntegrationTests.Solution2
 {
   public class ValuesControllerTest_S2 : IntegrationTestBase_S2
   {
@@ -62,15 +61,15 @@ namespace IntegrationTests
       Assert.Equal(_testUser.Name, userModel.Name);
     }
 
-    // This will fail: Authentication mechanism is overwritten in IntegrationTestBase.
+    // This will fail: Authentication mechanism is overwritten in WebApiFactory_S2.
     //[Fact]
     //public async Task GetAdminUser_With_NonAdmin()
     //{
     //  // Arrange
-    //  HttpClient httpClient = createClientFor(_user);
+    //  _testUser = _user;
 
     //  // Act
-    //  HttpResponseMessage response = await httpClient.GetAsync("values/admin");
+    //  HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
 
     //  // Assert
     //  Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
