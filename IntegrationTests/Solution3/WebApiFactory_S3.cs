@@ -1,21 +1,22 @@
 ﻿using System.Net.Http;
+using IntegrationTests.Solution1.Dummy;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 
-namespace PlayingWithTestHost.IntegrationTests.Solution2
+namespace IntegrationTests.Solution3
 {
-  public class WebApiFactory_S2 : WebApplicationFactory<Startup>
+  public class WebApiFactory_S3 : WebApplicationFactory<Startup>
   {
     public UserModel TestUser { get; set; }
 
     public HttpClient HttpClient { get; private set; }
 
-    public WebApiFactory_S2()
+    public WebApiFactory_S3()
     {
       HttpClient = CreateClient();
     }
@@ -29,11 +30,12 @@ namespace PlayingWithTestHost.IntegrationTests.Solution2
         {
           services.AddSingleton<IValueProvider, FakeValueProvider>();
 
-          services.AddMvc(options =>
+          services.AddAuthentication(options =>
           {
-            options.Filters.Add(new AllowAnonymousFilter());
-            options.Filters.Add(new FakeUserFilter(() => TestUser?.ToClaims()));
-          });
+            options.DefaultAuthenticateScheme = TestStartup.AuthScheme;
+            options.DefaultChallengeScheme    = TestStartup.AuthScheme;
+          })
+          .AddTestAuth(o => o.TestUserClaimsFunc = () => TestUser?.ToClaims());
         })
         .UseStartup<Startup>();
     }

@@ -1,4 +1,6 @@
-﻿namespace PlayingWithTestHost.IntegrationTests
+﻿using PlayingWithTestHost;
+
+namespace IntegrationTests
 {
   public class FakeValueProvider : IValueProvider
   {

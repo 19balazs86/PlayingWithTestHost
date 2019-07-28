@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 using Xunit;
 
-namespace PlayingWithTestHost.IntegrationTests.Solution3
+namespace IntegrationTests.Solution3
 {
   public class ValuesControllerTest_S3 : IntegrationTestBase_S3
   {

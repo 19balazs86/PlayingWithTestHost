@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PlayingWithTestHost;
 
-namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
+namespace IntegrationTests.Solution1.Dummy
 {
   public class TestStartup : Startup
   {

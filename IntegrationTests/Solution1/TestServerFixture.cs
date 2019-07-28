@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Net.Http;
 using System.Reflection;
+using IntegrationTests.Solution1.Dummy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PlayingWithTestHost.IntegrationTests.Solution1.Dummy;
+using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 
-namespace PlayingWithTestHost.IntegrationTests.Solution1
+namespace IntegrationTests.Solution1
 {
   public class TestServerFixture : IDisposable, ITestUserProvider
   {

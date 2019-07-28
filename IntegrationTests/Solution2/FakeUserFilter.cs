@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace PlayingWithTestHost.IntegrationTests.Solution2
+namespace IntegrationTests.Solution2
 {
   public class FakeUserFilter : IAsyncActionFilter
   {

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace PlayingWithTestHost.IntegrationTests.Solution1.Dummy
+namespace IntegrationTests.Solution1.Dummy
 {
   public static class TestAuthenticationExtensions
   {

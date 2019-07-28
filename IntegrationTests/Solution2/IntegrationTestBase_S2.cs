@@ -2,7 +2,7 @@
 using PlayingWithTestHost.Model;
 using Xunit;
 
-namespace PlayingWithTestHost.IntegrationTests.Solution2
+namespace IntegrationTests.Solution2
 {
   public class IntegrationTestBase_S2 : IClassFixture<WebApiFactory_S2>
   {

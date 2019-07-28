@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayingWithTestHost", "PlayingWithTestHost\PlayingWithTestHost.csproj", "{A1279344-6641-4070-B949-96ED1C4B4313}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayingWithTestHost.IntegrationTests", "PlayingWithTestHost.IntegrationTests\PlayingWithTestHost.IntegrationTests.csproj", "{56713DEE-7330-4896-8616-50AEC4E3D873}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{56713DEE-7330-4896-8616-50AEC4E3D873}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BEBB52ED-3D24-4EFF-8CBA-29F28BCF17BD}"
 	ProjectSection(SolutionItems) = preProject
