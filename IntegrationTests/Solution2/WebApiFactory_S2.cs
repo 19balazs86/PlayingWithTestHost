@@ -1,10 +1,10 @@
 ﻿using System.Net.Http;
-using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 
@@ -21,22 +21,20 @@ namespace IntegrationTests.Solution2
       HttpClient = CreateClient();
     }
 
-    protected override IWebHostBuilder CreateWebHostBuilder()
+    protected override IHostBuilder CreateHostBuilder()
     {
-      return WebHost
+      return Host
         .CreateDefaultBuilder()
-        //.UseEnvironment(EnvironmentName.Development)
-        .ConfigureTestServices(services =>
-        {
-          services.AddSingleton<IValueProvider, FakeValueProvider>();
-
-          services.AddMvc(options =>
-          {
-            options.Filters.Add(new AllowAnonymousFilter());
-            options.Filters.Add(new FakeUserFilter(() => TestUser?.ToClaims()));
-          });
-        })
-        .UseStartup<Startup>();
+        //.UseEnvironment(Environments.Development)
+        .ConfigureWebHostDefaults(webHostBuilder =>
+          webHostBuilder
+            .UseStartup<Startup>() // The order is matter.
+            .ConfigureTestServices(services =>
+            {
+              services
+                .AddSingleton<IValueProvider, FakeValueProvider>()
+                .AddSingleton<IPolicyEvaluator>(_ => new FakeUserPolicyEvaluator(() => TestUser?.ToClaims()));
+            }));
     }
   }
 }
