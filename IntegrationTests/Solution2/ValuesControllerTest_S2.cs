@@ -61,19 +61,18 @@ namespace IntegrationTests.Solution2
       Assert.Equal(_testUser.Name, userModel.Name);
     }
 
-    // This will fail: Authentication mechanism is overwritten in WebApiFactory_S2.
-    //[Fact]
-    //public async Task GetAdminUser_With_NonAdmin()
-    //{
-    //  // Arrange
-    //  _testUser = _user;
+    [Fact(Skip = "This will fail: Authentication mechanism is overwritten in WebApiFactory_S2.")]
+    public async Task GetAdminUser_With_NonAdmin()
+    {
+      // Arrange
+      _testUser = _user;
 
-    //  // Act
-    //  HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
+      // Act
+      HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
 
-    //  // Assert
-    //  Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-    //}
+      // Assert
+      Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
 
     // The test is passed no matter the user is admin or not.
     [Fact]
@@ -118,6 +117,19 @@ namespace IntegrationTests.Solution2
 
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact(Skip = "This will fail: Authentication mechanism is overwritten in WebApiFactory_S2.")]
+    public async Task Response_Unauthorized()
+    {
+      // Arrange
+      _testUser = null;
+
+      // Act
+      HttpResponseMessage response = await _httpClient.GetAsync("values/user");
+
+      // Assert
+      Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
   }
 }

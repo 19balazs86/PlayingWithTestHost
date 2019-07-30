@@ -122,5 +122,18 @@ namespace IntegrationTests.Solution1
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
+
+    [Fact]
+    public async Task Response_Unauthorized()
+    {
+      // Arrange
+      _fixture.TestUser = null;
+
+      // Act
+      HttpResponseMessage response = await _fixture.HttpClient.GetAsync("values/user");
+
+      // Assert
+      Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
   }
 }

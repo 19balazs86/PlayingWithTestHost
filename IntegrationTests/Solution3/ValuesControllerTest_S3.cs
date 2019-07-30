@@ -117,5 +117,18 @@ namespace IntegrationTests.Solution3
       // Assert
       Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
+
+    [Fact]
+    public async Task Response_Unauthorized()
+    {
+      // Arrange
+      _testUser = null;
+
+      // Act
+      HttpResponseMessage response = await _httpClient.GetAsync("values/user");
+
+      // Assert
+      Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
   }
 }
