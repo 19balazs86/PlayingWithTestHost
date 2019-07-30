@@ -32,12 +32,11 @@ namespace IntegrationTests.Solution1.Dummy
       ClaimsIdentity claimsIdentity = Options.Identity();
 
       if (claimsIdentity is null)
-        return Task.FromResult(AuthenticateResult.Fail("ClaimsIdentity is null."));
+        return Task.FromResult(AuthenticateResult.NoResult());
 
-      ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+      var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-      AuthenticationTicket authenticationTicket =
-        new AuthenticationTicket(claimsPrincipal, new AuthenticationProperties(), TestStartup.AuthScheme);
+      var authenticationTicket = new AuthenticationTicket(claimsPrincipal, TestStartup.AuthScheme);
 
       return Task.FromResult(AuthenticateResult.Success(authenticationTicket));
     }
