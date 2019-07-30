@@ -15,11 +15,12 @@ Authentication can causes unauthorized response in the integration test. I prepa
 - Medium article: [Bypassing ASP.NET Core Authorize in integration tests.](https://medium.com/jackwild/bypassing-asp-net-core-2-0-authorize-tags-in-integration-tests-7bda8fcb0eca)
 - Gunnar Peipman blog: [Identity user accounts in integration tests](https://gunnarpeipman.com/testing/aspnet-core-identity-integration-tests/) (`ActionFilter`).
 
-> Regarding this topic, worth to check the [Alba](http://jasperfx.github.io/alba/getting_started) - class library to write integration tests.
+#### Solution #1
 
-#### Solution #1 with WebHostBuilder
-
-Using `WebHostBuilder` to create a `TestServer`. Generate a `HttpClient` to call our WebAPI.
+- Using `WebHostBuilder` to create a `TestServer` 'manually'.
+- Using a `TestStartup` class derived from `Startup`.
+- Apply a custom `AuthenticationHandler` to authorize the request.
+- `Authorize` attribute affects the response (200, 401, 403).
 
 ```csharp
 IWebHostBuilder builder = new WebHostBuilder()
@@ -30,26 +31,50 @@ _testServer = new TestServer(builder);
 Client = _testServer.CreateClient();
 ```
 
-#### Test method
+#### Solution #2
+
+- Using `WebApplicationFactory` and override the `CreateWebHostBuilder` method.
+- Using the same authentication mechanism which is defined in the `Startup` file.
+- Add 2 filters `AllowAnonymousFilter` and `FakeUserFilter` (which is an `ActionFilter`) to provide test users.
+- Cons: `Authorize` attribute in the controller does not have any role.
 
 ```csharp
-[Theory]
-[InlineData("values", typeof(IEnumerable<string>))]
-[InlineData("values/config", typeof(TestConfig))]
-[InlineData("values/user", typeof(UserModel))]
-public async Task GetValues(string requestUri, Type objectType)
+protected override IWebHostBuilder CreateWebHostBuilder()
 {
-    // Arrange
-    HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("GET"), requestUri);
+  return WebHost
+      .CreateDefaultBuilder()
+      .ConfigureTestServices(services =>
+      {
+          services.AddMvc(options =>
+          {
+              options.Filters.Add(new AllowAnonymousFilter());
+              options.Filters.Add(new FakeUserFilter(() => TestUser?.ToClaims()));
+          });
+      })
+      .UseStartup<Startup>();
+}
+```
 
-    // Act
-    HttpResponseMessage response = await _fixture.Client.SendAsync(request);
+#### Solution #3
 
-    // Assert
-    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+- Using `WebApplicationFactory` and override the `CreateWebHostBuilder` method.
+- Using the `Startup` file, but override the authentication mechanism with the custom `AuthenticationHandler` from the Solution #1.
+- `Authorize` attribute affects the response (200, 401, 403).
 
-    object responseObject = await response.Content.ReadAsAsync(objectType);
-
-    Assert.NotNull(responseObject);
+```csharp
+protected override IWebHostBuilder CreateWebHostBuilder()
+{
+    return WebHost
+        .CreateDefaultBuilder()
+        .ConfigureTestServices(services =>
+        {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = TestStartup.AuthScheme;
+                options.DefaultChallengeScheme    = TestStartup.AuthScheme;
+            })
+            .AddTestAuth(o => o.TestUserClaimsFunc = () => TestUser?.ToClaims());
+        })
+        .UseStartup<Startup>();
 }
 ```
