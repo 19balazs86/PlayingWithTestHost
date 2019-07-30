@@ -50,10 +50,6 @@
 						"value": "application/json"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:5000/User/Logout",
 					"protocol": "http",
@@ -74,10 +70,6 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:5000/Values/User",
 					"protocol": "http",
@@ -94,14 +86,30 @@
 			"response": []
 		},
 		{
+			"name": "GetCurrentAdmin",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/Values/Admin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"Values",
+						"Admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GetConfig",
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:5000/Values/Config",
 					"protocol": "http",
@@ -122,10 +130,6 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:5000/Values/value-provider",
 					"protocol": "http",
@@ -149,10 +153,6 @@
 				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "http://localhost:5000/Values/anonymous",
 					"protocol": "http",
