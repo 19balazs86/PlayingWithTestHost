@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Newtonsoft.Json;
 
 namespace PlayingWithTestHost.Model
 {
   public class UserModel
   {
-    public string Name { get; }
-    public IEnumerable<string> Roles { get; }
+    public string Name { get; set; }
+    public IEnumerable<string> Roles { get; set; }
 
-    [JsonConstructor]
+    public UserModel() { }
+
     public UserModel(string name, IEnumerable<string> roles)
     {
       Name  = name;

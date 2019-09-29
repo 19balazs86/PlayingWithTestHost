@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace PlayingWithTestHost
 {
@@ -16,10 +16,12 @@ namespace PlayingWithTestHost
 
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+      services.AddControllers();
 
       // --> Setup the authentication.
       ConfigureAuthentication(services);
+
+      //services.AddAuthorization();
 
       // --> BindTo: use the custom extension.
       services.AddSingleton(Configuration.BindTo<TestConfig>());
@@ -28,14 +30,17 @@ namespace PlayingWithTestHost
       services.AddSingleton<IValueProvider, ValueProvider>();
     }
 
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       if (env.IsDevelopment())
         app.UseDeveloperExceptionPage();
 
-      app.UseAuthentication();
+      app.UseRouting();
 
-      app.UseMvc();
+      app.UseAuthentication();
+      app.UseAuthorization();
+
+      app.UseEndpoints(endpoints => endpoints.MapControllers());
     }
 
     protected virtual void ConfigureAuthentication(IServiceCollection services)
