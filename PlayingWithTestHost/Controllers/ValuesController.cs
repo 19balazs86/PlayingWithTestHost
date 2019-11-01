@@ -6,7 +6,7 @@ using PlayingWithTestHost.Model;
 namespace PlayingWithTestHost.Controllers
 {
   [Route("[controller]")]
-  [Authorize] // Here we have an Authorize attribute.
+  //[Authorize] // Here we have an Authorize attribute.
   [ApiController]
   public class ValuesController : ControllerBase
   {

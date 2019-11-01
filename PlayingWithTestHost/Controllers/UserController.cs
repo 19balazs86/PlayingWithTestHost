@@ -12,6 +12,7 @@ namespace PlayingWithTestHost.Controllers
   [ApiController]
   public class UserController : ControllerBase
   {
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody]LoginModel loginModel)
     {
@@ -31,7 +32,6 @@ namespace PlayingWithTestHost.Controllers
       return Unauthorized();
     }
 
-    [Authorize]
     [HttpGet("logout")]
     public async Task<IActionResult> Logout()
     {
