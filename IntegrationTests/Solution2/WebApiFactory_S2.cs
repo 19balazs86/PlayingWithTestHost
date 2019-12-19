@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 
@@ -21,20 +20,14 @@ namespace IntegrationTests.Solution2
       HttpClient = CreateClient();
     }
 
-    protected override IHostBuilder CreateHostBuilder()
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-      return Host
-        .CreateDefaultBuilder()
-        //.UseEnvironment(Environments.Development)
-        .ConfigureWebHostDefaults(webHostBuilder =>
-          webHostBuilder
-            .UseStartup<Startup>() // The order is matter.
-            .ConfigureTestServices(services =>
-            {
-              services
-                .AddSingleton<IValueProvider, FakeValueProvider>()
-                .AddSingleton<IPolicyEvaluator>(_ => new FakeUserPolicyEvaluator(() => TestUser?.ToClaims()));
-            }));
+      builder.ConfigureTestServices(services =>
+      {
+        services
+          .AddSingleton<IValueProvider, FakeValueProvider>()
+          .AddSingleton<IPolicyEvaluator>(_ => new FakeUserPolicyEvaluator(() => TestUser?.ToClaims()));
+      });
     }
   }
 }

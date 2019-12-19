@@ -7,11 +7,12 @@ Authentication can causes unauthorized response in the integration test. I prepa
 [Separate branch](https://github.com/19balazs86/PlayingWithTestHost/tree/netcoreapp2.2) with the .NET Core 2.2 version.
 
 #### Resources
-- Microsoft Docs: [Integration tests in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-3.0).
-- Microsoft video: [YouTube link.](https://www.youtube.com/watch?v=O3AvN2Rr1uI)
-- Medium article: [Integration Testing in Asp.Net Core.](https://koukia.ca/integration-testing-in-asp-net-core-2-0-51d14ede3968)
-- InfoQ article: [How to Test ASP.NET Core Web API.](https://www.infoq.com/articles/testing-aspnet-core-web-api)
-- Microsoft Docs: [Use cookie authentication without ASP.NET Core Identity.](https://docs.microsoft.com/en-ie/aspnet/core/security/authentication/cookie?view=aspnetcore-3.0)
+- [Integration tests in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-3.1) *(Microsoft Docs)*
+- [YouTube link](https://www.youtube.com/watch?v=O3AvN2Rr1uI) *(Microsoft video)*
+- [Integration Testing in Asp.Net Core](https://koukia.ca/integration-testing-in-asp-net-core-2-0-51d14ede3968) *(Medium article)*
+- [How to Test ASP.NET Core Web API](https://www.infoq.com/articles/testing-aspnet-core-web-api) *(InfoQ article)*
+- [Use cookie authentication without ASP.NET Core Identity](https://docs.microsoft.com/en-ie/aspnet/core/security/authentication/cookie?view=aspnetcore-3.1) *(Microsoft Docs)*
+- [Converting integration tests to .NET Core 3.0](https://andrewlock.net/converting-integration-tests-to-net-core-3) *(Andrew Lock)*
 
 ##### Authentication solutions in integration test
 - Medium article: [Bypassing ASP.NET Core Authorize in integration tests.](https://medium.com/jackwild/bypassing-asp-net-core-2-0-authorize-tags-in-integration-tests-7bda8fcb0eca)
@@ -35,45 +36,43 @@ Client = _testServer.CreateClient();
 
 #### Solution #2
 
-- Using `WebApplicationFactory` and override the `CreateWebHostBuilder` method.
+- Using `WebApplicationFactory` and override the `ConfigureWebHost` method.
 - Using the same authentication mechanism which is defined in the `Startup` file.
 - After .NET Core 3, there is an [AuthorizationMiddleware](https://github.com/aspnet/AspNetCore/blob/master/src/Security/Authorization/Policy/src/AuthorizationMiddleware.cs) using a [PolicyEvaluator](https://github.com/aspnet/AspNetCore/blob/master/src/Security/Authorization/Policy/src/PolicyEvaluator.cs) which makes this solution a bit different compared with the previous version.
 - Cons: `Authorize` attribute in the controller does not have any effects for the response.
 
 ```csharp
-protected override IHostBuilder CreateHostBuilder()
+protected override void ConfigureWebHost(IWebHostBuilder builder)
 {
-  return Host
-    .CreateDefaultBuilder()
-    .ConfigureWebHostDefaults(webHostBuilder =>
-      webHostBuilder
-        .UseStartup<Startup>()
-        .ConfigureTestServices(services =>
-            services.AddSingleton<IPolicyEvaluator>(_ => new FakeUserPolicyEvaluator(...))));
+  builder.ConfigureTestServices(services =>
+  {
+    services
+      .AddSingleton<IValueProvider, FakeValueProvider>()
+      .AddSingleton<IPolicyEvaluator>(_ => new FakeUserPolicyEvaluator(() => TestUser?.ToClaims()));
+  });
 }
 ```
 
 #### Solution #3
 
-- Using `WebApplicationFactory` and override the `CreateWebHostBuilder` method.
+- Using `WebApplicationFactory` and override the `ConfigureWebHost` method.
 - Using the `Startup` file, but override the authentication mechanism with the custom `AuthenticationHandler` from the Solution #1.
 - `Authorize` attribute effects the response (200, 401, 403).
 
 ```csharp
-protected override IWebHostBuilder CreateWebHostBuilder()
+protected override void ConfigureWebHost(IWebHostBuilder builder)
 {
-    return WebHost
-        .CreateDefaultBuilder()
-        .ConfigureTestServices(services =>
-        {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = TestStartup.AuthScheme;
-                options.DefaultChallengeScheme    = TestStartup.AuthScheme;
-            })
-            .AddTestAuth(o => o.TestUserClaimsFunc = () => TestUser?.ToClaims());
-        })
-        .UseStartup<Startup>();
+  builder.ConfigureTestServices(services =>
+  {
+    services.AddSingleton<IValueProvider, FakeValueProvider>();
+
+    services.AddAuthentication(options =>
+    {
+      options.DefaultAuthenticateScheme = TestStartup.AuthScheme;
+      options.DefaultChallengeScheme    = TestStartup.AuthScheme;
+    })
+   .AddTestAuth(o => o.TestUserClaimsFunc = () => TestUser?.ToClaims());
+  });
 }
 ```
 
