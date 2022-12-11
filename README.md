@@ -1,22 +1,18 @@
 # Playing with TestHost
 
-This .NET Core WebAPI application is an example for using the built-in `TestServer` and `WebApplicationFactory` **to write integration tests** against your HTTP endpoints.
+This .NET WebAPI is an example of using the built-in `TestServer` and `WebApplicationFactory` **to write integration tests** against your HTTP endpoints.
 
-Authentication can causes unauthorized response in the integration test. I prepared 3+1 types of solutions for this issue.
+Authentication can causes unauthorized response in the integration test. The following solutions can be used.
 
 [Separate branch](https://github.com/19balazs86/PlayingWithTestHost/tree/netcoreapp2.2) with the .NET Core 2.2 version.
 
 #### Resources
-- [Integration tests in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-3.1) *(Microsoft Docs)*
+- [Integration tests in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests) *(Microsoft Docs)*
 - [YouTube link](https://www.youtube.com/watch?v=O3AvN2Rr1uI) *(Microsoft video)*
-- [Integration Testing in Asp.Net Core](https://koukia.ca/integration-testing-in-asp-net-core-2-0-51d14ede3968) *(Medium article)*
-- [How to Test ASP.NET Core Web API](https://www.infoq.com/articles/testing-aspnet-core-web-api) *(InfoQ article)*
-- [Use cookie authentication without ASP.NET Core Identity](https://docs.microsoft.com/en-ie/aspnet/core/security/authentication/cookie?view=aspnetcore-3.1) *(Microsoft Docs)*
-- [Converting integration tests to .NET Core 3.0](https://andrewlock.net/converting-integration-tests-to-net-core-3) *(Andrew Lock)*
-
-##### Authentication solutions in integration test
-- Medium article: [Bypassing ASP.NET Core Authorize in integration tests.](https://medium.com/jackwild/bypassing-asp-net-core-2-0-authorize-tags-in-integration-tests-7bda8fcb0eca)
-- Gunnar Peipman blog: [Identity user accounts in integration tests](https://gunnarpeipman.com/testing/aspnet-core-identity-integration-tests/) (`ActionFilter`).
+- Using TestServer, articles: [Link #1](https://koukia.ca/integration-testing-in-asp-net-core-2-0-51d14ede3968) | [Link #2](https://www.infoq.com/articles/testing-aspnet-core-web-api)
+- [Use cookie authentication without ASP.NET Core Identity](https://docs.microsoft.com/en-ie/aspnet/core/security/authentication/cookie) *(Microsoft Docs)*
+- [Converting integration tests to .NET Core 3.0](https://andrewlock.net/converting-integration-tests-to-net-core-3) *(Andrew Lock)
+- [Identity user accounts in integration tests](https://gunnarpeipman.com/testing/aspnet-core-identity-integration-tests/) using `ActionFilter` *(Gunnar Peipman)*
 
 #### Solution #1
 
@@ -44,12 +40,12 @@ Client = _testServer.CreateClient();
 ```csharp
 protected override void ConfigureWebHost(IWebHostBuilder builder)
 {
-  builder.ConfigureTestServices(services =>
-  {
-    services
-      .AddSingleton<IValueProvider, FakeValueProvider>()
-      .AddSingleton<IPolicyEvaluator>(_ => new FakeUserPolicyEvaluator(() => TestUser?.ToClaims()));
-  });
+    builder.ConfigureTestServices(services =>
+    {
+        services
+            .AddSingleton<IValueProvider, FakeValueProvider>()
+            .AddSingleton<IPolicyEvaluator>(_ => new FakeUserPolicyEvaluator(() => TestUser?.ToClaims()));
+    });
 }
 ```
 
@@ -62,24 +58,19 @@ protected override void ConfigureWebHost(IWebHostBuilder builder)
 ```csharp
 protected override void ConfigureWebHost(IWebHostBuilder builder)
 {
-  builder.ConfigureTestServices(services =>
-  {
-    services.AddSingleton<IValueProvider, FakeValueProvider>();
-
-    services.AddAuthentication(options =>
+    builder.ConfigureTestServices(services =>
     {
-      options.DefaultAuthenticateScheme = TestStartup.AuthScheme;
-      options.DefaultChallengeScheme    = TestStartup.AuthScheme;
-    })
-   .AddTestAuth(o => o.TestUserClaimsFunc = () => TestUser?.ToClaims());
-  });
+        services.AddSingleton<IValueProvider, FakeValueProvider>();
+
+        services.AddTestAuthentication(o => o.TestUserClaimsFunc = () => TestUser?.ToClaims());
+    });
 }
 ```
 
 #### Solution #4
 
-- There is another way to bypassing the authorize process in my repository: [PlayingWithSignalR](https://github.com/19balazs86/PlayingWithSignalR).
-- Using a `DelegatingHandler` and pass it to the `CreateDefaultClient` method.
+- Another way to bypassing the JWT authentication process in my repository: [PlayingWithSignalR](https://github.com/19balazs86/PlayingWithSignalR).
+- Apply a custom `DelegatingHandler` in the `CreateDefaultClient` method.
 - The handler injects a token in the `Authorization` header.
 
 ```csharp
@@ -94,11 +85,11 @@ public class WebApiFactory : WebApplicationFactory<Startup>
 ```csharp
 public class AuthDelegatingHandler : DelegatingHandler
 {
-  protected override Task<HttpResponseMessage> SendAsync(...)
-  {
-    request.Headers.Authorization = ...;
+    protected override Task<HttpResponseMessage> SendAsync(...)
+    {
+        request.Headers.Authorization = ...;
 
-    return base.SendAsync(request, cancelToken);
-  }
+        return base.SendAsync(request, cancelToken);
+    }
 }
 ```
