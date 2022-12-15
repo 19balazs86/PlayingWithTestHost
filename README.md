@@ -1,6 +1,6 @@
 # Playing with TestHost
 
-This .NET WebAPI is an example of using the built-in `TestServer` and `WebApplicationFactory` **to write integration tests** against your HTTP endpoints.
+In this repository you can find a .NET WebAPI and a test project, using the built-in `TestServer` and `WebApplicationFactory` **to write integration tests** against your HTTP endpoints. One of the example of using a library called [Alba](https://jasperfx.github.io/alba), which utilizes the built-in `TestServer`.
 
 Authentication can causes unauthorized response in the integration test. The following solutions can be used.
 
@@ -9,14 +9,14 @@ Authentication can causes unauthorized response in the integration test. The fol
 #### Resources
 - [Integration tests in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests) *(Microsoft Docs)*
 - [YouTube link](https://www.youtube.com/watch?v=O3AvN2Rr1uI) *(Microsoft video)*
-- Using TestServer, articles: [Link #1](https://koukia.ca/integration-testing-in-asp-net-core-2-0-51d14ede3968) | [Link #2](https://www.infoq.com/articles/testing-aspnet-core-web-api)
+- Articles using TestServer: [Link #1](https://koukia.ca/integration-testing-in-asp-net-core-2-0-51d14ede3968) | [Link #2](https://www.infoq.com/articles/testing-aspnet-core-web-api)
 - [Use cookie authentication without ASP.NET Core Identity](https://docs.microsoft.com/en-ie/aspnet/core/security/authentication/cookie) *(Microsoft Docs)*
-- [Converting integration tests to .NET Core 3.0](https://andrewlock.net/converting-integration-tests-to-net-core-3) *(Andrew Lock)
+- [Converting integration tests to .NET Core 3.0](https://andrewlock.net/converting-integration-tests-to-net-core-3) *(Andrew Lock)*
 - [Identity user accounts in integration tests](https://gunnarpeipman.com/testing/aspnet-core-identity-integration-tests/) using `ActionFilter` *(Gunnar Peipman)*
 
 #### Solution #1
 
-- Using `WebHostBuilder` to create a `TestServer` 'manually'.
+- Using `WebHostBuilder` to create a `TestServer` manually.
 - Using a `TestStartup` class derived from `Startup`.
 - Apply a custom `AuthenticationHandler` to authorize the request.
 - `Authorize` attribute affects the response (200, 401, 403).
@@ -68,6 +68,41 @@ protected override void ConfigureWebHost(IWebHostBuilder builder)
 ```
 
 #### Solution #4
+
+Using a library called [Alba](https://jasperfx.github.io/alba) which utilizes the built-in `TestServer` 
+
+```csharp
+public class AlbaHostFixture
+{
+    public IAlbaHost AlbaWebHost { get; set; }
+
+    public UserModel TestUser { get; set; }
+
+    public async Task InitializeAsync()
+    {
+        AlbaWebHost = await AlbaHost.For<Program>(configureWebHostBuilder);
+    }
+
+    private void configureWebHostBuilder(IWebHostBuilder webHostBuilder)
+    {
+        webHostBuilder.ConfigureTestServices(configureTestServices);
+    }
+
+    private void configureTestServices(IServiceCollection services)
+    {
+        services.AddTestAuthentication(configureAuthOptions);
+
+        services.AddSingleton<IValueProvider, FakeValueProvider>();
+    }
+
+    private void configureAuthOptions(TestAuthenticationOptions options)
+    {
+        options.TestUserClaimsFunc = () => TestUser?.ToClaims();
+    }
+}
+```
+
+#### Solution #5
 
 - Another way to bypassing the JWT authentication process in my repository: [PlayingWithSignalR](https://github.com/19balazs86/PlayingWithSignalR).
 - Apply a custom `DelegatingHandler` in the `CreateDefaultClient` method.
