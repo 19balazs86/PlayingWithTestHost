@@ -2,6 +2,7 @@
 using IntegrationTests.Solution1.Dummy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PlayingWithTestHost.Model;
 using Xunit;
@@ -10,6 +11,8 @@ namespace IntegrationTests.Solution4_Alba
 {
     public class AlbaHostFixture : IAsyncLifetime
     {
+        public const string TestConfigValue = "OverriddenValue";
+
         public IAlbaHost AlbaWebHost { get; set; }
 
         public UserModel TestUser { get; set; }
@@ -25,6 +28,8 @@ namespace IntegrationTests.Solution4_Alba
         private void configureWebHostBuilder(IWebHostBuilder webHostBuilder)
         {
             webHostBuilder.ConfigureTestServices(configureTestServices);
+
+            webHostBuilder.ConfigureAppConfiguration(configureAppConfiguration);
         }
 
         private void configureTestServices(IServiceCollection services)
@@ -37,6 +42,16 @@ namespace IntegrationTests.Solution4_Alba
         private void configureAuthOptions(TestAuthenticationOptions options)
         {
             options.TestUserClaimsFunc = () => TestUser?.ToClaims();
+        }
+
+        private static void configureAppConfiguration(IConfigurationBuilder configurationBuilder)
+        {
+            var configurationOverridden = new Dictionary<string, string>
+            {
+                ["TestConfig:Key1"] = TestConfigValue
+            };
+
+            configurationBuilder.AddInMemoryCollection(configurationOverridden);
         }
 
         public async Task DisposeAsync()

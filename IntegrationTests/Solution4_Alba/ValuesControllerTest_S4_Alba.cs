@@ -43,7 +43,7 @@ namespace IntegrationTests.Solution4_Alba
 
             // Assert
             Assert.NotNull(testConfig);
-            Assert.Equal("Value1", testConfig.Key1);
+            Assert.Equal(AlbaHostFixture.TestConfigValue, testConfig.Key1);
             Assert.True(testConfig.Key2);
         }
 
