@@ -1,8 +1,11 @@
-﻿namespace PlayingWithTestHost
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PlayingWithTestHost;
+
+public record TestConfig
 {
-  public class TestConfig
-  {
-    public string Key1 { get; set; }
-    public bool Key2 { get; set; }
-  }
+    [Required, MinLength(3)]
+    public string Key1 { get; init; }
+
+    public bool Key2 { get; init; }
 }

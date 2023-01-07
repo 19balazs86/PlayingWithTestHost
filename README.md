@@ -7,12 +7,14 @@ Authentication can causes unauthorized response in the integration test. The fol
 [Separate branch](https://github.com/19balazs86/PlayingWithTestHost/tree/netcoreapp2.2) with the .NET Core 2.2 version.
 
 #### Resources
-- [Integration tests in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests) *(Microsoft Docs)*
-- [YouTube link](https://www.youtube.com/watch?v=O3AvN2Rr1uI) *(Microsoft video)*
-- Articles using TestServer: [Link #1](https://koukia.ca/integration-testing-in-asp-net-core-2-0-51d14ede3968) | [Link #2](https://www.infoq.com/articles/testing-aspnet-core-web-api)
-- [Use cookie authentication without ASP.NET Core Identity](https://docs.microsoft.com/en-ie/aspnet/core/security/authentication/cookie) *(Microsoft Docs)*
-- [Converting integration tests to .NET Core 3.0](https://andrewlock.net/converting-integration-tests-to-net-core-3) *(Andrew Lock)*
-- [Identity user accounts in integration tests](https://gunnarpeipman.com/testing/aspnet-core-identity-integration-tests/) using `ActionFilter` *(Gunnar Peipman)*
+- [Integration tests in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests) 📚
+- [Converting integration tests to .NET Core 3.0](https://andrewlock.net/converting-integration-tests-to-net-core-3) 📓*Andrew Lock*
+- [Identity user accounts in integration tests](https://gunnarpeipman.com/testing/aspnet-core-identity-integration-tests/) using `ActionFilter` 📓*Gunnar Peipman*
+- Feature: Validate configurations on application start
+  - [Adding validation to the options pattern](https://www.milanjovanovic.tech/blog/adding-validation-to-the-options-pattern-in-asp-net-core) 📓*Milan*
+  - [Adding validation to strongly typed configuration objects using FluentValidation](https://andrewlock.net/adding-validation-to-strongly-typed-configuration-objects-using-flentvalidation/) 📓*Andrew Lock*
+  - [Options Validation](https://code-maze.com/aspnet-configuration-options-validation/) 📓*Code-Maze*
+
 
 #### Solution #1
 

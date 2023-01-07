@@ -1,22 +1,23 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using PlayingWithTestHost.Model;
 
-namespace PlayingWithTestHost.Controllers
+namespace PlayingWithTestHost.Controllers;
+
+[Route("[controller]")]
+//[Authorize] // Here we have an Authorize attribute.
+[ApiController]
+public class ValuesController : ControllerBase
 {
-  [Route("[controller]")]
-  //[Authorize] // Here we have an Authorize attribute.
-  [ApiController]
-  public class ValuesController : ControllerBase
-  {
     private readonly TestConfig _testConfig;
+
     private readonly IValueProvider _valueProvider;
 
-    public ValuesController(TestConfig testConfig, IValueProvider valueProvider)
+    public ValuesController(IOptions<TestConfig> testConfig, IValueProvider valueProvider)
     {
-      _testConfig    = testConfig;
-      _valueProvider = valueProvider;
+        _testConfig    = testConfig.Value;
+        _valueProvider = valueProvider;
     }
 
     [HttpGet]
@@ -38,5 +39,4 @@ namespace PlayingWithTestHost.Controllers
     [AllowAnonymous]
     [HttpGet("anonymous")]
     public ActionResult<UserModel> GetAnonymous() => Ok();
-  }
 }

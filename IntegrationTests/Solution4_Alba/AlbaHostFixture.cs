@@ -7,56 +7,58 @@ using Microsoft.Extensions.DependencyInjection;
 using PlayingWithTestHost.Model;
 using Xunit;
 
-namespace IntegrationTests.Solution4_Alba
+namespace IntegrationTests.Solution4_Alba;
+
+public class AlbaHostFixture : IAsyncLifetime
 {
-    public class AlbaHostFixture : IAsyncLifetime
+    public const string TestConfigValue = "OverriddenValue";
+
+    public IAlbaHost AlbaWebHost { get; set; }
+
+    public UserModel TestUser { get; set; }
+
+    public async Task InitializeAsync()
     {
-        public const string TestConfigValue = "OverriddenValue";
+        //var securityStub = new CustomAuthenticationStub(() => TestUser?.ToClaims());
+        //AlbaWebHost = await AlbaHost.For<PlayingWithTestHost.Program>(configureWebHostBuilder, securityStub);
 
-        public IAlbaHost AlbaWebHost { get; set; }
+        AlbaWebHost = await AlbaHost.For<PlayingWithTestHost.Program>(configureWebHostBuilder);
 
-        public UserModel TestUser { get; set; }
+        // You can access services
+        //var config = AlbaWebHost.Services.GetRequiredService<IOptions<PlayingWithTestHost.TestConfig>>();
+    }
 
-        public async Task InitializeAsync()
+    private void configureWebHostBuilder(IWebHostBuilder webHostBuilder)
+    {
+        webHostBuilder.ConfigureTestServices(configureTestServices);
+
+        webHostBuilder.ConfigureAppConfiguration(configureAppConfiguration);
+    }
+
+    private void configureTestServices(IServiceCollection services)
+    {
+        services.AddTestAuthentication(configureAuthOptions);
+
+        services.AddSingleton<PlayingWithTestHost.IValueProvider, FakeValueProvider>();
+    }
+
+    private void configureAuthOptions(TestAuthenticationOptions options)
+    {
+        options.TestUserClaimsFunc = () => TestUser?.ToClaims();
+    }
+
+    private static void configureAppConfiguration(IConfigurationBuilder configurationBuilder)
+    {
+        var configurationOverridden = new Dictionary<string, string>
         {
-            //var securityStub = new CustomAuthenticationStub(() => TestUser?.ToClaims());
-            //AlbaWebHost = await AlbaHost.For<PlayingWithTestHost.Program>(configureWebHostBuilder, securityStub);
+            ["TestConfig:Key1"] = TestConfigValue
+        };
 
-            AlbaWebHost = await AlbaHost.For<PlayingWithTestHost.Program>(configureWebHostBuilder);
-        }
+        configurationBuilder.AddInMemoryCollection(configurationOverridden);
+    }
 
-        private void configureWebHostBuilder(IWebHostBuilder webHostBuilder)
-        {
-            webHostBuilder.ConfigureTestServices(configureTestServices);
-
-            webHostBuilder.ConfigureAppConfiguration(configureAppConfiguration);
-        }
-
-        private void configureTestServices(IServiceCollection services)
-        {
-            services.AddTestAuthentication(configureAuthOptions);
-
-            services.AddSingleton<PlayingWithTestHost.IValueProvider, FakeValueProvider>();
-        }
-
-        private void configureAuthOptions(TestAuthenticationOptions options)
-        {
-            options.TestUserClaimsFunc = () => TestUser?.ToClaims();
-        }
-
-        private static void configureAppConfiguration(IConfigurationBuilder configurationBuilder)
-        {
-            var configurationOverridden = new Dictionary<string, string>
-            {
-                ["TestConfig:Key1"] = TestConfigValue
-            };
-
-            configurationBuilder.AddInMemoryCollection(configurationOverridden);
-        }
-
-        public async Task DisposeAsync()
-        {
-            await AlbaWebHost.DisposeAsync();
-        }
+    public async Task DisposeAsync()
+    {
+        await AlbaWebHost.DisposeAsync();
     }
 }
