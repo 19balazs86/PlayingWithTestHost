@@ -15,12 +15,7 @@ namespace IntegrationTests.Solution1.Dummy
 
         protected override void ConfigureAuthentication(IServiceCollection services)
         {
-            services.AddTestAuthentication(configureOptions);
-        }
-
-        private void configureOptions(TestAuthenticationOptions options)
-        {
-            options.TestUserClaimsFunc = () => _testUserProvider.TestUser?.ToClaims();
+            services.AddTestAuthentication(() => _testUserProvider.TestUser?.ToClaims());
         }
     }
 }

@@ -5,69 +5,73 @@ using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
-namespace IntegrationTests.Solution1.Dummy
+namespace IntegrationTests.Solution1.Dummy;
+
+public static class TestAuthenticationExtensions
 {
-    public static class TestAuthenticationExtensions
+    public static IServiceCollection AddTestAuthentication(this IServiceCollection services, Func<IEnumerable<Claim>> testUserClaimsFunc)
     {
-        public static IServiceCollection AddTestAuthentication(this IServiceCollection services, Action<TestAuthenticationOptions> configureOptions)
-        {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = Consts.AuthScheme;
-                options.DefaultChallengeScheme    = Consts.AuthScheme;
-            })
-            .addTestAuthenticationScheme(configureOptions);
-
-            return services;
-        }
-
-        private static AuthenticationBuilder addTestAuthenticationScheme(this AuthenticationBuilder builder, Action<TestAuthenticationOptions> configureOptions)
-        {
-            return builder.AddScheme<TestAuthenticationOptions, TestAuthenticationHandler>(Consts.AuthScheme, configureOptions);
-        }
+        return services.AddTestAuthentication(options => options.TestUserClaimsFunc = testUserClaimsFunc);
     }
 
-    public class TestAuthenticationHandler : AuthenticationHandler<TestAuthenticationOptions>
+    public static IServiceCollection AddTestAuthentication(this IServiceCollection services, Action<TestAuthenticationOptions> configureOptions)
     {
-        public TestAuthenticationHandler(
-            IOptionsMonitor<TestAuthenticationOptions> options,
-            ILoggerFactory logger,
-            UrlEncoder encoder,
-            ISystemClock clock) : base(options, logger, encoder, clock)
+        services.AddAuthentication(options =>
         {
-        }
+            options.DefaultAuthenticateScheme = Consts.AuthScheme;
+            options.DefaultChallengeScheme    = Consts.AuthScheme;
+        })
+        .addTestAuthenticationScheme(configureOptions);
 
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
-        {
-            ClaimsIdentity claimsIdentity = Options.Identity();
-
-            if (claimsIdentity is null)
-                return Task.FromResult(AuthenticateResult.NoResult());
-
-            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-            var authenticationTicket = new AuthenticationTicket(claimsPrincipal, Consts.AuthScheme);
-
-            return Task.FromResult(AuthenticateResult.Success(authenticationTicket));
-        }
+        return services;
     }
 
-    public class TestAuthenticationOptions : AuthenticationSchemeOptions
+    private static AuthenticationBuilder addTestAuthenticationScheme(this AuthenticationBuilder builder, Action<TestAuthenticationOptions> configureOptions)
     {
-        public Func<IEnumerable<Claim>> TestUserClaimsFunc { get; set; }
+        return builder.AddScheme<TestAuthenticationOptions, TestAuthenticationHandler>(Consts.AuthScheme, configureOptions);
+    }
+}
 
-        public ClaimsIdentity Identity()
-        {
-            IEnumerable<Claim> claims = TestUserClaimsFunc?.Invoke();
-
-            if (claims is null) return null;
-
-            return new ClaimsIdentity(claims, Consts.AuthScheme);
-        }
+public class TestAuthenticationHandler : AuthenticationHandler<TestAuthenticationOptions>
+{
+    public TestAuthenticationHandler(
+        IOptionsMonitor<TestAuthenticationOptions> options,
+        ILoggerFactory logger,
+        UrlEncoder encoder,
+        ISystemClock clock) : base(options, logger, encoder, clock)
+    {
     }
 
-    file class Consts
+    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        public const string AuthScheme = "TestAuthScheme";
+        ClaimsIdentity claimsIdentity = Options.Identity();
+
+        if (claimsIdentity is null)
+            return Task.FromResult(AuthenticateResult.NoResult());
+
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+        var authenticationTicket = new AuthenticationTicket(claimsPrincipal, Consts.AuthScheme);
+
+        return Task.FromResult(AuthenticateResult.Success(authenticationTicket));
     }
+}
+
+public class TestAuthenticationOptions : AuthenticationSchemeOptions
+{
+    public Func<IEnumerable<Claim>> TestUserClaimsFunc { get; set; }
+
+    public ClaimsIdentity Identity()
+    {
+        IEnumerable<Claim> claims = TestUserClaimsFunc?.Invoke();
+
+        if (claims is null) return null;
+
+        return new ClaimsIdentity(claims, Consts.AuthScheme);
+    }
+}
+
+file class Consts
+{
+    public const string AuthScheme = "TestAuthScheme";
 }

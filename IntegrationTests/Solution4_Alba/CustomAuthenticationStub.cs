@@ -19,12 +19,7 @@ namespace IntegrationTests.Solution4_Alba
 
         IHostBuilder IAlbaExtension.Configure(IHostBuilder builder)
         {
-            return builder.ConfigureServices(services => services.AddTestAuthentication(configureOptions));
-        }
-
-        private void configureOptions(TestAuthenticationOptions options)
-        {
-            options.TestUserClaimsFunc = _testUserFunc;
+            return builder.ConfigureServices(services => services.AddTestAuthentication(_testUserFunc));
         }
 
         void IDisposable.Dispose() { }

@@ -7,33 +7,27 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 
-namespace IntegrationTests.Solution3
+namespace IntegrationTests.Solution3;
+
+public class WebApiFactory_S3 : WebApplicationFactory<Startup>
 {
-    public class WebApiFactory_S3 : WebApplicationFactory<Startup>
+    public UserModel TestUser { get; set; }
+
+    public HttpClient HttpClient { get; private set; }
+
+    public WebApiFactory_S3()
     {
-        public UserModel TestUser { get; set; }
+        HttpClient = CreateClient();
+    }
 
-        public HttpClient HttpClient { get; private set; }
-
-        public WebApiFactory_S3()
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.ConfigureTestServices(services =>
         {
-            HttpClient = CreateClient();
-        }
+            //services.RemoveAll<IValueProvider>(); // This is not necessary, just to make sure.
+            services.Replace(ServiceDescriptor.Singleton<IValueProvider, FakeValueProvider>());
 
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            builder.ConfigureTestServices(services =>
-            {
-                services.RemoveAll<IValueProvider>(); // This is not necessary, just to make sure.
-                services.AddSingleton<IValueProvider, FakeValueProvider>();
-
-                services.AddTestAuthentication(configureOptions);
-            });
-        }
-
-        private void configureOptions(TestAuthenticationOptions options)
-        {
-            options.TestUserClaimsFunc = () => TestUser?.ToClaims();
-        }
+            services.AddTestAuthentication(() => TestUser?.ToClaims());
+        });
     }
 }
