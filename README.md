@@ -15,6 +15,7 @@ Authentication can causes unauthorized response in the integration test. The fol
   - [Best way to validate your settings](https://youtu.be/jblRYDMTtvg) *(DataAnnotation, FluentValidation)* 📽️*18m - Nick Chapsas*
   - [Adding validation to strongly typed configuration objects using FluentValidation](https://andrewlock.net/adding-validation-to-strongly-typed-configuration-objects-using-flentvalidation/) 📓*Andrew Lock*
   - [Options Validation](https://code-maze.com/aspnet-configuration-options-validation/) 📓*Code-Maze*
+  - [Validating Connection Strings on Startup](https://khalidabuhakmeh.com/validating-connection-strings-on-dotnet-startup) 📓*Khalid Abuhakmeh*
 
 
 #### Solution #1
