@@ -12,6 +12,7 @@ Authentication can causes unauthorized response in the integration test. The fol
 - [Identity user accounts in integration tests](https://gunnarpeipman.com/testing/aspnet-core-identity-integration-tests/) using `ActionFilter` 📓*Gunnar Peipman*
 - Feature: Validate configurations on application start
   - [Adding validation to the options pattern](https://www.milanjovanovic.tech/blog/adding-validation-to-the-options-pattern-in-asp-net-core) 📓*Milan*
+  - [Using .NET 8 Source Generators to validate IOptions during startup](https://code-maze.com/aspnetcore-using-source-generators-to-validate-ioptions) 📓*Code-Maze - OptionsValidator attribute*
   - [Best way to validate your settings](https://youtu.be/jblRYDMTtvg) *(DataAnnotation, FluentValidation)* 📽️*18m - Nick Chapsas*
     - [Validating nested DataAnnotation IOptions recursively with MiniValidation](https://andrewlock.net/validating-nested-dataannotation-options-recursively-with-minivalidation) 📓*Andrew Lock*
     - [GSoft.ComponentModel.DataAnnotations](https://github.com/gsoft-inc/gsoft-componentmodel-dataannotations) 👤*GSoft - Provides new data annotation attributes*
