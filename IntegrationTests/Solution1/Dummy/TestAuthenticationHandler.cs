@@ -32,18 +32,20 @@ public static class TestAuthenticationExtensions
     }
 }
 
-public class TestAuthenticationHandler : AuthenticationHandler<TestAuthenticationOptions>
+public sealed class TestAuthenticationHandler : AuthenticationHandler<TestAuthenticationOptions>
 {
     public TestAuthenticationHandler(
         IOptionsMonitor<TestAuthenticationOptions> options,
         ILoggerFactory logger,
-        UrlEncoder encoder,
-        ISystemClock clock) : base(options, logger, encoder, clock)
+        UrlEncoder encoder) : base(options, logger, encoder)
     {
     }
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        // You have access to the following properties: Request, Context
+        // Like in this solution: https://youtu.be/jcid26MuhX8 | But I prefer my workaround.
+
         ClaimsIdentity claimsIdentity = Options.Identity();
 
         if (claimsIdentity is null)
@@ -57,7 +59,7 @@ public class TestAuthenticationHandler : AuthenticationHandler<TestAuthenticatio
     }
 }
 
-public class TestAuthenticationOptions : AuthenticationSchemeOptions
+public sealed class TestAuthenticationOptions : AuthenticationSchemeOptions
 {
     public Func<IEnumerable<Claim>> TestUserClaimsFunc { get; set; }
 
@@ -71,7 +73,7 @@ public class TestAuthenticationOptions : AuthenticationSchemeOptions
     }
 }
 
-file class Consts
+file static class Consts
 {
     public const string AuthScheme = "TestAuthScheme";
 }
