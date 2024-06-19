@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using PlayingWithTestHost;
+﻿using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
+using System.Net;
+using System.Net.Http.Json;
 using Xunit;
 
-namespace IntegrationTests.Solution3
+namespace IntegrationTests.Solution3;
+
+public sealed class ValuesControllerTest_S3 : IntegrationTestBase_S3
 {
-  public class ValuesControllerTest_S3 : IntegrationTestBase_S3
-  {
     private readonly UserModel _user, _admin;
 
     public ValuesControllerTest_S3(WebApiFactory_S3 webApiFactory) : base(webApiFactory)
     {
-      _user  = new UserModel("Test user",  new[] { "User" });
-      _admin = new UserModel("Test admin", new[] { "Admin" });
+        _user  = new UserModel("Test user",  ["User"]);
+        _admin = new UserModel("Test admin", ["Admin"]);
     }
 
     [Theory]
@@ -25,18 +22,18 @@ namespace IntegrationTests.Solution3
     [InlineData("values/user",   typeof(UserModel))]
     public async Task GetValues(string requestPath, Type objectType)
     {
-      // Arrange
-      _testUser = _user;
-      
-      // Act
-      HttpResponseMessage response = await _httpClient.GetAsync(requestPath);
-      
-      // Assert
-      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        // Arrange
+        _testUser = _user;
 
-      object responseObject = await response.Content.ReadAsAsync(objectType);
+        // Act
+        HttpResponseMessage response = await _httpClient.GetAsync(requestPath);
 
-      Assert.NotNull(responseObject);
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        object responseObject = await response.Content.ReadFromJsonAsync(objectType);
+
+        Assert.NotNull(responseObject);
     }
 
     [Theory]
@@ -44,91 +41,90 @@ namespace IntegrationTests.Solution3
     [InlineData(false)]
     public async Task GetValuesForUser(bool isAdmin)
     {
-      // Arrange
-      _testUser = isAdmin ? _admin : _user;
+        // Arrange
+        _testUser = isAdmin ? _admin : _user;
 
-      // Act
-      HttpResponseMessage response = await _httpClient.GetAsync("values/user");
+        // Act
+        HttpResponseMessage response = await _httpClient.GetAsync("values/user");
 
-      // Assert
-      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-      UserModel userModel = await response.Content.ReadAsAsync<UserModel>();
+        UserModel userModel = await response.Content.ReadFromJsonAsync<UserModel>();
 
-      Assert.NotNull(userModel);
-      Assert.Equal(_testUser.Name, userModel.Name);
+        Assert.NotNull(userModel);
+        Assert.Equal(_testUser.Name, userModel.Name);
     }
 
     [Fact]
     public async Task GetAdminUser_With_NonAdmin()
     {
-      // Arrange
-      _testUser = _user;
+        // Arrange
+        _testUser = _user;
 
-      // Act
-      HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
+        // Act
+        HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
 
-      // Assert
-      Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
     // The test is passed no matter the user is admin or not.
     [Fact]
     public async Task GetAdminUser_With_Admin()
     {
-      // Arrange
-      _testUser = _admin;
+        // Arrange
+        _testUser = _admin;
 
-      // Act
-      HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
+        // Act
+        HttpResponseMessage response = await _httpClient.GetAsync("values/admin");
 
-      // Assert
-      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-      UserModel userModel = await response.Content.ReadAsAsync<UserModel>();
+        UserModel userModel = await response.Content.ReadFromJsonAsync<UserModel>();
 
-      Assert.NotNull(userModel);
-      Assert.Equal(_admin.Name, userModel.Name);
+        Assert.NotNull(userModel);
+        Assert.Equal(_admin.Name, userModel.Name);
     }
 
     [Fact]
     public async Task GetValueProvider()
     {
-      // Arrange
-      _testUser = _user;
+        // Arrange
+        _testUser = _user;
 
-      // Act
-      HttpResponseMessage response = await _httpClient.GetAsync("values/value-provider");
+        // Act
+        HttpResponseMessage response = await _httpClient.GetAsync("values/value-provider");
 
-      // Assert
-      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-      Assert.Equal(FakeValueProvider.Value, await response.Content.ReadAsStringAsync());
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(FakeValueProvider.Value, await response.Content.ReadAsStringAsync());
     }
 
     [Fact]
     public async Task Anonymous()
     {
-      // Arrange
-      _testUser = null;
+        // Arrange
+        _testUser = null;
 
-      // Act
-      HttpResponseMessage response = await _httpClient.GetAsync("values/anonymous");
+        // Act
+        HttpResponseMessage response = await _httpClient.GetAsync("values/anonymous");
 
-      // Assert
-      Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     [Fact]
     public async Task Response_Unauthorized()
     {
-      // Arrange
-      _testUser = null;
+        // Arrange
+        _testUser = null;
 
-      // Act
-      HttpResponseMessage response = await _httpClient.GetAsync("values/user");
+        // Act
+        HttpResponseMessage response = await _httpClient.GetAsync("values/user");
 
-      // Assert
-      Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
-  }
 }
