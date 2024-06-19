@@ -16,10 +16,14 @@ public class Startup
         // --> Setup the authentication.
         ConfigureAuthentication(services);
 
+        // --> Add: Options and validate
         services.AddOptions<TestConfig>()
             .BindConfiguration(nameof(TestConfig))
             .ValidateDataAnnotations()
             .ValidateOnStart();
+
+        // services.AddOptionsWithValidateOnStart<TestConfig>(nameof(TestConfig)).ValidateDataAnnotations();
+        // services.AddOptionsWithValidateOnStart<TestConfig, TypeOfValidator>(nameof(TestConfig));
 
         // --> Add IValueProvider and override it in the unit test.
         services.AddSingleton<IValueProvider, ValueProvider>();
