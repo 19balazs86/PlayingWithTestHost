@@ -8,7 +8,7 @@ namespace PlayingWithTestHost.Controllers;
 [Route("[controller]")]
 //[Authorize] // Here we have an Authorize attribute.
 [ApiController]
-public class ValuesController : ControllerBase
+public sealed class ValuesController : ControllerBase
 {
     private readonly TestConfig _testConfig;
 
@@ -21,22 +21,22 @@ public class ValuesController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<string>> Get() => new string[] { "value1", "value2" };
+    public IEnumerable<string> Get() => ["value1", "value2"];
 
     [HttpGet("config")]
-    public ActionResult<TestConfig> GetConfigValues() => _testConfig;
+    public TestConfig GetConfigValues() => _testConfig;
 
     [HttpGet("user")]
-    public ActionResult<UserModel> GetUserValues() => new UserModel(User.Claims);
+    public UserModel GetUserValues() => UserModel.CreateFromClaims(User.Claims);
 
     [Authorize(Roles = "Admin")]
     [HttpGet("admin")]
-    public ActionResult<UserModel> GetAdminUserValues() => new UserModel(User.Claims);
+    public UserModel GetAdminUserValues() => UserModel.CreateFromClaims(User.Claims);
 
     [HttpGet("value-provider")]
-    public ActionResult<string> GetValueProvider() => _valueProvider.GetValue();
+    public string GetValueProvider() => _valueProvider.GetValue();
 
     [AllowAnonymous]
     [HttpGet("anonymous")]
-    public ActionResult<UserModel> GetAnonymous() => Ok();
+    public IActionResult GetAnonymous() => Ok();
 }

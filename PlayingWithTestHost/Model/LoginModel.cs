@@ -1,8 +1,3 @@
-﻿namespace PlayingWithTestHost.Model
-{
-  public class LoginModel
-  {
-    public string Name { get; set; }
-    public string Password { get; set; }
-  }
-}
+﻿namespace PlayingWithTestHost.Model;
+
+public record LoginModel(string Name, string Password);

@@ -1,43 +1,38 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PlayingWithTestHost.Model;
+using System.Security.Claims;
 
-namespace PlayingWithTestHost.Controllers
+namespace PlayingWithTestHost.Controllers;
+
+[Route("[controller]")]
+[ApiController]
+public sealed class UserController : ControllerBase
 {
-  [Route("[controller]")]
-  [ApiController]
-  public class UserController : ControllerBase
-  {
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody]LoginModel loginModel)
+    public async Task<IActionResult> Login(LoginModel loginModel)
     {
-      if (loginModel.Name == "test" && loginModel.Password == "pass")
-      {
-        UserModel user = new UserModel(loginModel.Name, new []{ "User" });
+        if (loginModel is not { Name: "test", Password: "pass" })
+        {
+            return Unauthorized();
+        }
 
-        ClaimsIdentity claimsIdentity = new ClaimsIdentity(user.ToClaims(), CookieAuthenticationDefaults.AuthenticationScheme);
+        var user = new UserModel(loginModel.Name, ["User"]);
 
-        await HttpContext.SignInAsync(
-          CookieAuthenticationDefaults.AuthenticationScheme,
-          new ClaimsPrincipal(claimsIdentity));
+        var claimsIdentity = new ClaimsIdentity(user.ToClaims(), Startup.DefaultAuthScheme);
+
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+        await HttpContext.SignInAsync(Startup.DefaultAuthScheme, claimsPrincipal);
 
         return Ok();
-      }
-
-      return Unauthorized();
     }
 
     [HttpGet("logout")]
-    public async Task<IActionResult> Logout()
+    public Task Logout()
     {
-      await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-      return Ok();
+        return HttpContext.SignOutAsync(Startup.DefaultAuthScheme);
     }
-  }
 }

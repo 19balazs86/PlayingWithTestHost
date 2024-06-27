@@ -5,6 +5,8 @@ namespace PlayingWithTestHost;
 
 public class Startup
 {
+    public const string DefaultAuthScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
     public IConfiguration Configuration { get; }
 
     public Startup(IConfiguration configuration) => Configuration = configuration;
@@ -39,8 +41,7 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment())
-            app.UseDeveloperExceptionPage();
+        app.UseDeveloperExceptionPage();
 
         app.UseRouting();
 
@@ -53,19 +54,20 @@ public class Startup
     protected virtual void ConfigureAuthentication(IServiceCollection services)
     {
         services
-          .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-          .AddCookie(o => {
-              //o.LoginPath  = "/user/login";
-              //o.LogoutPath = "/user/logout";
-              o.Events.OnRedirectToLogin = context =>
+          .AddAuthentication(DefaultAuthScheme)
+          .AddCookie(DefaultAuthScheme, options =>
+          {
+              //options.LoginPath  = "/user/login";
+              //options.LogoutPath = "/user/logout";
+              options.Events.OnRedirectToLogin = context =>
               {
-                  context.Response.StatusCode = 401;
+                  context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                   return Task.CompletedTask;
               };
 
-              o.Events.OnRedirectToAccessDenied = context =>
+              options.Events.OnRedirectToAccessDenied = context =>
               {
-                  context.Response.StatusCode = 403;
+                  context.Response.StatusCode = StatusCodes.Status403Forbidden;
                   return Task.CompletedTask;
               };
           });
