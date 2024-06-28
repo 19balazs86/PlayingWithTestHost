@@ -2,9 +2,9 @@
 
 In this repository you can find a .NET WebAPI and a test project, using the built-in `TestServer` and `WebApplicationFactory` **to write integration tests** against your HTTP endpoints. One of the example of using a library called [Alba](https://jasperfx.github.io/alba), which utilizes the built-in `TestServer`.
 
-Authentication can causes unauthorized response in the integration test. The following solutions can be used.
+During the integration test, exceptions can occur on the WebAPI, and it is important to be aware of them. The solution is to have a custom logger that uses the `ITestOutputHelper` to write API's logs during the test. We can apply this logger on the created test server.
 
-[Separate branch](https://github.com/19balazs86/PlayingWithTestHost/tree/netcoreapp2.2) with the .NET Core 2.2 version.
+Authentication can causes unauthorized response in the integration test. The following solutions can be used.
 
 #### Resources
 - [Integration tests in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests) 📚

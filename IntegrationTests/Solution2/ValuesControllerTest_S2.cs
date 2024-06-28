@@ -3,6 +3,7 @@ using PlayingWithTestHost.Model;
 using System.Net;
 using System.Net.Http.Json;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace IntegrationTests.Solution2;
 
@@ -10,7 +11,7 @@ public sealed class ValuesControllerTest_S2 : IntegrationTestBase_S2
 {
     private readonly UserModel _user, _admin;
 
-    public ValuesControllerTest_S2(WebApiFactory_S2 webApiFactory) : base(webApiFactory)
+    public ValuesControllerTest_S2(WebApiFactory_S2 webApiFactory, ITestOutputHelper testOutput) : base(webApiFactory, testOutput)
     {
         _user  = new UserModel("Test user",  ["User"]);
         _admin = new UserModel("Test admin", ["Admin"]);
