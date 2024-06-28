@@ -1,22 +1,20 @@
-﻿using System.Net.Http;
-using PlayingWithTestHost.Model;
+﻿using PlayingWithTestHost.Model;
 using Xunit;
 
-namespace IntegrationTests.Solution3
+namespace IntegrationTests.Solution3;
+
+public abstract class IntegrationTestBase_S3 : IClassFixture<WebApiFactoryFixture_S3>
 {
-  public class IntegrationTestBase_S3 : IClassFixture<WebApiFactory_S3>
-  {
-    private readonly WebApiFactory_S3 _webApiFactory;
+    private readonly WebApiFactoryFixture_S3 _webApiFactory;
 
     protected UserModel _testUser { get => _webApiFactory.TestUser; set => _webApiFactory.TestUser = value; }
 
     protected HttpClient _httpClient => _webApiFactory.HttpClient;
 
-    public IntegrationTestBase_S3(WebApiFactory_S3 webApiFactory)
+    public IntegrationTestBase_S3(WebApiFactoryFixture_S3 webApiFactory)
     {
-      _webApiFactory = webApiFactory;
+        _webApiFactory = webApiFactory;
 
-      _testUser = null;
+        _testUser = null;
     }
-  }
 }

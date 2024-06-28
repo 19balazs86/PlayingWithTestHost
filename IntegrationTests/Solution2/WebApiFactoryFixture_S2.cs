@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 namespace IntegrationTests.Solution2;
 
 #nullable enable
-public sealed class WebApiFactory_S2 : WebApplicationFactory<Startup>
+public sealed class WebApiFactoryFixture_S2 : WebApplicationFactory<Startup>
 {
     public UserModel? TestUser { get; set; }
 
@@ -21,7 +21,7 @@ public sealed class WebApiFactory_S2 : WebApplicationFactory<Startup>
 
     public ITestOutputHelper? TestOutput { get; set; }
 
-    public WebApiFactory_S2()
+    public WebApiFactoryFixture_S2()
     {
         HttpClient = CreateClient();
     }

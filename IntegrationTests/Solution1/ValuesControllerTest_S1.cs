@@ -1,3 +1,4 @@
+using IntegrationTests.Solution1.Dummy;
 using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 using System.Net;
@@ -18,8 +19,8 @@ public sealed class ValuesControllerTest_S1 : IClassFixture<TestServerFixture>
 
         _fixture.TestUser = null;
 
-        _user  = new UserModel("Test user",  ["User"]);
-        _admin = new UserModel("Test admin", ["Admin"]);
+        _user  = TestUsers.User;
+        _admin = TestUsers.Admin;
     }
 
     [Theory]

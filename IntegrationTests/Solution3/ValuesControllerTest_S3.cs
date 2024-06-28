@@ -1,4 +1,5 @@
-﻿using PlayingWithTestHost;
+﻿using IntegrationTests.Solution1.Dummy;
+using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 using System.Net;
 using System.Net.Http.Json;
@@ -10,10 +11,10 @@ public sealed class ValuesControllerTest_S3 : IntegrationTestBase_S3
 {
     private readonly UserModel _user, _admin;
 
-    public ValuesControllerTest_S3(WebApiFactory_S3 webApiFactory) : base(webApiFactory)
+    public ValuesControllerTest_S3(WebApiFactoryFixture_S3 webApiFactory) : base(webApiFactory)
     {
-        _user  = new UserModel("Test user",  ["User"]);
-        _admin = new UserModel("Test admin", ["Admin"]);
+        _user  = TestUsers.User;
+        _admin = TestUsers.Admin;
     }
 
     [Theory]

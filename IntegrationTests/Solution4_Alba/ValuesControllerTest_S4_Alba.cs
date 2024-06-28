@@ -1,4 +1,5 @@
 ﻿using Alba;
+using IntegrationTests.Solution1.Dummy;
 using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 using System.Net;
@@ -19,8 +20,8 @@ public sealed class ValuesControllerTest_S4_Alba : IClassFixture<AlbaHostFixture
         _fixture = albaHostFixture;
         _albaHost = albaHostFixture.AlbaWebHost;
 
-        _user  = new UserModel("Test user",  ["User"]);
-        _admin = new UserModel("Test admin", ["Admin"]);
+        _user  = TestUsers.User;
+        _admin = TestUsers.Admin;
 
         _fixture.TestUser = _user;
     }

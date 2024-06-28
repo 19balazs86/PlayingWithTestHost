@@ -9,13 +9,13 @@ using PlayingWithTestHost.Model;
 
 namespace IntegrationTests.Solution3;
 
-public class WebApiFactory_S3 : WebApplicationFactory<Startup>
+public class WebApiFactoryFixture_S3 : WebApplicationFactory<Startup>
 {
     public UserModel TestUser { get; set; }
 
     public HttpClient HttpClient { get; private set; }
 
-    public WebApiFactory_S3()
+    public WebApiFactoryFixture_S3()
     {
         HttpClient = CreateClient();
     }

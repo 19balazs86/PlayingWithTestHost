@@ -4,15 +4,15 @@ using Xunit.Abstractions;
 
 namespace IntegrationTests.Solution2;
 
-public abstract class IntegrationTestBase_S2 : IClassFixture<WebApiFactory_S2>
+public abstract class IntegrationTestBase_S2 : IClassFixture<WebApiFactoryFixture_S2>
 {
-    protected readonly WebApiFactory_S2 _webApiFactory;
+    protected readonly WebApiFactoryFixture_S2 _webApiFactory;
 
     protected UserModel _testUser { get => _webApiFactory.TestUser; set => _webApiFactory.TestUser = value; }
 
     protected HttpClient _httpClient => _webApiFactory.HttpClient;
 
-    public IntegrationTestBase_S2(WebApiFactory_S2 webApiFactory, ITestOutputHelper testOutput)
+    public IntegrationTestBase_S2(WebApiFactoryFixture_S2 webApiFactory, ITestOutputHelper testOutput)
     {
         _webApiFactory = webApiFactory;
 
