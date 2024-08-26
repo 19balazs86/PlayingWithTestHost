@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 using System.Reflection;
@@ -28,7 +27,7 @@ public class TestServerFixture : IDisposable, ITestUserProvider
             //.UseEnvironment(EnvironmentName.Development)
             .ConfigureAppConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.json"))
             .ConfigureServices(services => services.AddSingleton<ITestUserProvider>(this))
-            .ConfigureTestServices(services => services.Replace(ServiceDescriptor.Singleton<IValueProvider, FakeValueProvider>()))
+            .ConfigureTestServices(services => services.ReplaceWithSingletonExt<IValueProvider, FakeValueProvider>())
             .UseStartup<TestStartup>()
             .UseSetting(WebHostDefaults.ApplicationKey, typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
             // Important: UseSetting after UseStartup. Otherwise, the request run on not found.

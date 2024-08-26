@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using PlayingWithTestHost.Model;
 using Xunit;
 
@@ -40,7 +39,7 @@ public class AlbaHostFixture : IAsyncLifetime
     {
         services.AddTestAuthentication(() => TestUser?.ToClaims());
 
-        services.Replace(ServiceDescriptor.Singleton<PlayingWithTestHost.IValueProvider, FakeValueProvider>());
+        services.ReplaceWithSingletonExt<PlayingWithTestHost.IValueProvider, FakeValueProvider>();
     }
 
     private static void configureAppConfiguration(IConfigurationBuilder configurationBuilder)

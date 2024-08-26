@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
@@ -36,7 +35,7 @@ public sealed class WebApiFactoryFixture_S2 : WebApplicationFactory<Startup>
     private void configureServices(IServiceCollection services)
     {
         //services.RemoveAll<IValueProvider>(); // This is not necessary, just to make sure.
-        services.Replace(ServiceDescriptor.Singleton<IValueProvider, FakeValueProvider>());
+        services.ReplaceWithSingletonExt<IValueProvider, FakeValueProvider>();
 
         services.AddSingleton<IPolicyEvaluator>(_ => new FakeUserPolicyEvaluator(() => TestUser?.ToClaims()));
     }

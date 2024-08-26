@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using PlayingWithTestHost;
 using PlayingWithTestHost.Model;
 
@@ -25,7 +23,7 @@ public class WebApiFactoryFixture_S3 : WebApplicationFactory<Startup>
         builder.ConfigureTestServices(services =>
         {
             //services.RemoveAll<IValueProvider>(); // This is not necessary, just to make sure.
-            services.Replace(ServiceDescriptor.Singleton<IValueProvider, FakeValueProvider>());
+            services.ReplaceWithSingletonExt<IValueProvider, FakeValueProvider>();
 
             services.AddTestAuthentication(() => TestUser?.ToClaims());
         });
