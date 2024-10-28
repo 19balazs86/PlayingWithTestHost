@@ -6,7 +6,7 @@ During the integration test, exceptions can occur on the WebAPI, and it is impor
 
 Authentication can causes unauthorized response in the integration test. The following solutions can be used.
 
-#### Resources
+## Resources
 - [Integration tests in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests) 📚
 - [Converting integration tests to .NET Core 3.0](https://andrewlock.net/converting-integration-tests-to-net-core-3) 📓*Andrew Lock*
 - [Identity user accounts in integration tests](https://gunnarpeipman.com/testing/aspnet-core-identity-integration-tests/) using `ActionFilter` 📓*Gunnar Peipman*
@@ -20,7 +20,7 @@ Authentication can causes unauthorized response in the integration test. The fol
   - [Options Validation](https://code-maze.com/aspnet-configuration-options-validation/) 📓*Code-Maze*
   - [Validating Connection Strings on Startup](https://khalidabuhakmeh.com/validating-connection-strings-on-dotnet-startup) 📓*Khalid Abuhakmeh*
 
-#### Solution #1
+## Solution #1
 
 - Using `WebHostBuilder` to create a `TestServer` manually.
 - Using a `TestStartup` class derived from `Startup`.
@@ -36,7 +36,7 @@ _testServer = new TestServer(builder);
 Client = _testServer.CreateClient();
 ```
 
-#### Solution #2
+## Solution #2
 
 - Using `WebApplicationFactory` and override the `ConfigureWebHost` method.
 - Using the same authentication mechanism which is defined in the `Startup` file.
@@ -55,7 +55,7 @@ protected override void ConfigureWebHost(IWebHostBuilder builder)
 }
 ```
 
-#### Solution #3
+## Solution #3
 
 - Using `WebApplicationFactory` and override the `ConfigureWebHost` method.
 - Using the `Startup` file, but override the authentication mechanism with the custom `AuthenticationHandler` from the Solution #1.
@@ -73,7 +73,7 @@ protected override void ConfigureWebHost(IWebHostBuilder builder)
 }
 ```
 
-#### Solution #4
+## Solution #4
 
 Using a library called [Alba](https://jasperfx.github.io/alba) which utilizes the built-in `TestServer` 
 
@@ -108,7 +108,7 @@ public class AlbaHostFixture
 }
 ```
 
-#### Solution #5
+## Solution #5
 
 - Another way to bypassing the JWT authentication process in my repository: [PlayingWithSignalR](https://github.com/19balazs86/PlayingWithSignalR).
 - Apply a custom `DelegatingHandler` in the `CreateDefaultClient` method.
